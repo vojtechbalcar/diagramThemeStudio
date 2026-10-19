@@ -1,0 +1,341 @@
+@import "tailwindcss";
+
+/* The manuals mention class names in prose; do not generate them. */
+@source not "../../*.md";
+
+/* ==========================================================================
+   Linework tokens — design.md §7. Change the manual first, then this file.
+   ========================================================================== */
+
+:root {
+  color-scheme: light dark;
+
+  /* Unit & module */
+  --lw-u: 4px;
+  --lw-m: 48px;
+  --lw-m-half: 24px;
+  --lw-rule: 1px;
+  --lw-rule-heavy: 2px;
+  --lw-pinstripe-inset: 6px;
+  --lw-pinstripe: 2px;
+
+  /* Colour — palette (§1.2.1). Components never use these directly. */
+  --lw-black: #0b0b0b;
+  --lw-white: #ffffff;
+  --lw-grey-50: #f4f4f4;
+  --lw-grey-200: #d6d6d6;
+  --lw-grey-500: #6b6b6b;
+  --lw-grey-800: #2e2e2e;
+
+  /* Semantic — light-dark(light, dark). The mode is chosen by color-scheme below. */
+  --lw-page: light-dark(#ffffff, #0b0b0b);
+  --lw-text: light-dark(#0b0b0b, #ffffff);
+  --lw-text-muted: light-dark(#6b6b6b, #9a9a9a);
+  --lw-ink: light-dark(#0b0b0b, #ffffff);
+  --lw-on-ink: light-dark(#ffffff, #0b0b0b);
+  --lw-ink-hover: light-dark(#2e2e2e, #d6d6d6);
+  --lw-band: light-dark(#0b0b0b, #1e1e1e);
+  --lw-band-2: light-dark(#2e2e2e, #262626);
+  --lw-band-text: light-dark(#ffffff, #ffffff);
+  --lw-band-rule: light-dark(#0b0b0b, #3a3a3a);
+  --lw-rule-color: light-dark(#d6d6d6, #2e2e2e);
+  --lw-recess: light-dark(#f4f4f4, #161616);
+  --lw-signal: light-dark(#d7261e, #ff4b3e);
+  --lw-focus: light-dark(#0b0b0b, #ffffff);
+
+  /* Token-bullet ring (§1.6): which near-page fills get a ring in this mode */
+  --lw-ring-near-white: light-dark(#6b6b6b, transparent);
+  --lw-ring-near-black: light-dark(transparent, #9a9a9a);
+
+  /* Type */
+  --lw-font-sans: var(--font-inter), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --lw-font-mono:
+    var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Motion */
+  --lw-ease: cubic-bezier(0.2, 0, 0, 1);
+  --lw-dur-fast: 120ms;
+  --lw-dur: 160ms;
+  --lw-dur-slow: 200ms;
+  --lw-stagger: 30ms;
+}
+
+/* Manual override from the mode toggle; without it the OS preference applies. */
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --lw-dur-fast: 0ms;
+    --lw-dur: 0ms;
+    --lw-dur-slow: 0ms;
+    --lw-stagger: 0ms;
+  }
+}
+
+/* ==========================================================================
+   Tailwind theme. `inline` makes utilities read the --lw-* variable where
+   they are used, which is what lets ink scopes (§1.2.5) reach them.
+   Every default scale is removed so off-system utilities do not exist.
+   ========================================================================== */
+
+@theme inline {
+  --color-*: initial;
+  --color-page: var(--lw-page);
+  --color-ink: var(--lw-ink);
+  --color-on-ink: var(--lw-on-ink);
+  --color-ink-hover: var(--lw-ink-hover);
+  --color-muted: var(--lw-text-muted);
+  --color-band: var(--lw-band);
+  --color-band-2: var(--lw-band-2);
+  --color-band-text: var(--lw-band-text);
+  --color-rule: var(--lw-rule-color);
+  --color-recess: var(--lw-recess);
+  --color-signal: var(--lw-signal);
+  --color-focus: var(--lw-focus);
+  --color-black: var(--lw-black);
+  --color-white: var(--lw-white);
+
+  /* Spacing: the §1.1 scale only, plus the module names. */
+  --spacing: initial;
+  --spacing-0: 0px;
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+  --spacing-24: 96px;
+  --spacing-m: 48px;
+  --spacing-m-half: 24px;
+
+  --font-*: initial;
+  --font-sans: var(--lw-font-sans);
+  --font-mono: var(--lw-font-mono);
+
+  --text-*: initial;
+  --leading-*: initial;
+  --tracking-*: initial;
+  --radius-*: initial;
+  --shadow-*: initial;
+  --inset-shadow-*: initial;
+  --drop-shadow-*: initial;
+  --text-shadow-*: initial;
+  --blur-*: initial;
+  --perspective-*: initial;
+  --animate-*: initial;
+  --container-*: initial;
+
+  --ease-*: initial;
+  --ease-lw: var(--lw-ease);
+
+  --breakpoint-*: initial;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
+/* Hover only on devices that hover; `data-force` lets the /system specimen
+   show a state without the pointer. */
+@custom-variant hover {
+  @media (hover: hover) {
+    &:hover {
+      @slot;
+    }
+  }
+  &[data-force~="hover"] {
+    @slot;
+  }
+}
+@custom-variant active (&:active, &[data-force~="active"]);
+@custom-variant focus-visible (&:focus-visible, &[data-force~="focus"]);
+@custom-variant dark {
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme="light"]) *) {
+      @slot;
+    }
+  }
+  &:where(:root[data-theme="dark"] *) {
+    @slot;
+  }
+}
+
+/* ==========================================================================
+   Type scale — design.md §1.3.2. Named type-* so they never collide with
+   colour utilities such as text-band.
+   ========================================================================== */
+
+@utility type-display {
+  font-family: var(--lw-font-sans);
+  font-size: 64px;
+  line-height: 64px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+@utility type-title {
+  font-family: var(--lw-font-sans);
+  font-size: 28px;
+  line-height: 32px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+@utility type-band {
+  font-family: var(--lw-font-sans);
+  font-size: 20px;
+  line-height: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+@utility type-heading {
+  font-family: var(--lw-font-sans);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+@utility type-body {
+  font-family: var(--lw-font-sans);
+  font-size: 15px;
+  line-height: 20px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+@utility type-small {
+  font-family: var(--lw-font-sans);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+@utility type-micro {
+  font-family: var(--lw-font-sans);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+@utility type-mono {
+  font-family: var(--lw-font-mono);
+  font-size: 13px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+  font-variant-ligatures: none;
+}
+@utility type-mono-small {
+  font-family: var(--lw-font-mono);
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 500;
+  letter-spacing: 0;
+  font-variant-ligatures: none;
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+@layer base {
+  html {
+    background-color: var(--lw-page);
+    color: var(--lw-text);
+  }
+  body {
+    font-family: var(--lw-font-sans);
+    font-size: 15px;
+    line-height: 20px;
+    font-weight: 500;
+    font-feature-settings: "cv11" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  ::selection {
+    background-color: var(--lw-ink);
+    color: var(--lw-on-ink);
+  }
+
+  /* Focus ring — §1.2.6. Colour comes from the surface's --lw-focus;
+     inset rings add focus-visible:-outline-offset-4. */
+  :focus-visible,
+  [data-force~="focus"] {
+    outline: var(--lw-rule-heavy) solid var(--lw-focus);
+    outline-offset: 2px;
+  }
+}
+
+/* ==========================================================================
+   Named classes — design.md §7: .lw-band, .lw-band-2, .lw-inverted
+   ========================================================================== */
+
+@layer components {
+  .lw-band {
+    position: relative;
+    box-sizing: border-box;
+    height: var(--lw-m);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-inline: 16px;
+    background: var(--lw-band);
+    color: var(--lw-band-text);
+    border-bottom: var(--lw-rule) solid var(--lw-band-rule);
+    font: 700 20px/24px var(--lw-font-sans);
+    letter-spacing: -0.01em;
+  }
+  .lw-band::before {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    top: var(--lw-pinstripe-inset);
+    height: var(--lw-pinstripe);
+    background: var(--lw-band-text);
+  }
+
+  .lw-band-2 {
+    box-sizing: border-box;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-inline: 16px;
+    background: var(--lw-band-2);
+    color: var(--lw-band-text);
+    font: 600 13px/16px var(--lw-font-sans);
+  }
+
+  /* Ink scopes — §1.2.5 */
+  .lw-band,
+  .lw-band-2 {
+    --lw-ink: var(--lw-band-text);
+    --lw-text: var(--lw-band-text);
+    --lw-text-muted: var(--lw-grey-200);
+    --lw-ink-hover: var(--lw-grey-200);
+    --lw-focus: var(--lw-band-text);
+  }
+  .lw-band {
+    --lw-on-ink: var(--lw-band);
+  }
+  .lw-band-2 {
+    --lw-on-ink: var(--lw-band-2);
+  }
+
+  /* The element keeps the outer ink as its fill; its contents get the swap. */
+  .lw-inverted {
+    --lw-focus: var(--lw-on-ink);
+    --lw-swap-ink: var(--lw-on-ink);
+    --lw-swap-on-ink: var(--lw-ink);
+    background-color: var(--lw-ink);
+    color: var(--lw-on-ink);
+  }
+  .lw-inverted > * {
+    --lw-ink: var(--lw-swap-ink);
+    --lw-on-ink: var(--lw-swap-on-ink);
+    --lw-text: var(--lw-swap-ink);
+  }
+}
