@@ -60,6 +60,17 @@ describe("URL state", () => {
     expect(await decodeState(fragment)).toMatchObject({ ok: false, error: expect.stringContaining("too large") });
   });
 
+  it("rejects CSS declarations in shared fonts while retaining quoted Unicode font stacks", async () => {
+    const set = structuredClone(PRESETS[0].set);
+    const font = set.tokens.find((token) => token.type === "fontFamily")!;
+    for (const value of ['sans-serif; background-image: url(https://example.invalid/pixel)', '"broken\nfont"', '"</style>"']) {
+      font.value = value;
+      expect((await decodeState(await rawFragment(set))).ok, value).toBe(false);
+    }
+    font.value = '"日本語フォント", "Helvetica Neue", sans-serif';
+    expect(await decodeState(await rawFragment(set))).toEqual({ ok: true, set });
+  });
+
   it("generates a canonical current-origin editor URL without search parameters", async () => {
     const set = PRESETS[0].set;
     const url = new URL(await shareUrl(set, "https://linework.example/editor?tracking=secret#old"));
@@ -67,5 +78,8 @@ describe("URL state", () => {
     expect(url.pathname).toBe("/editor");
     expect(url.search).toBe("");
     expect(await decodeState(url.hash)).toEqual({ ok: true, set });
+    const credentials = new URL(await shareUrl(set, "https://user:password@linework.example/editor"));
+    expect(credentials.username).toBe("");
+    expect(credentials.password).toBe("");
   });
 });

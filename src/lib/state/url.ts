@@ -74,9 +74,7 @@ export async function decodeState(fragment: string): Promise<DecodedState> {
 }
 
 export async function shareUrl(set: TokenSet, currentUrl: string): Promise<string> {
-  const url = new URL(currentUrl);
-  url.pathname = "/editor";
-  url.search = "";
+  const url = new URL("/editor", new URL(currentUrl).origin);
   url.hash = await encodeState(set);
   return url.href;
 }

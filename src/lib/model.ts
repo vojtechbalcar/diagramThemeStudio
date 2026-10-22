@@ -5,6 +5,7 @@
  */
 
 import { z } from "zod";
+import { isFontStack } from "@/lib/tokens/values";
 
 export const TOKEN_TYPES = ["color", "fontFamily", "dimension"] as const;
 export const TOKEN_SOURCES = ["dtcg", "css", "figma", "manual", "preset"] as const;
@@ -67,6 +68,9 @@ export const TokenSchema = z
     }
     if (token.type !== "color" && token.alpha !== undefined) {
       ctx.addIssue({ code: "custom", path: ["alpha"], message: "Only colours have alpha." });
+    }
+    if (token.type === "fontFamily" && (!isFontStack(token.value, true) || /[\r\n\f<>]/.test(token.value))) {
+      ctx.addIssue({ code: "custom", path: ["value"], message: "Use a font family or font stack without CSS declarations or markup." });
     }
     if (token.type === "dimension" && !DIMENSION.test(token.value)) {
       ctx.addIssue({ code: "custom", path: ["value"], message: "Dimensions are px or rem, e.g. 16px." });
