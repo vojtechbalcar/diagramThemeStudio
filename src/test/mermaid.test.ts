@@ -20,7 +20,7 @@ function engine() {
       events.push(`render:${colour}`);
       await new Promise((resolve) => setTimeout(resolve, 1));
       active--;
-      if (source === "broken") throw new Error("Invalid diagram");
+      if (source === "sequenceDiagram\n broken") throw new Error("Invalid diagram");
       return { svg: `<svg>${colour}</svg>` };
     },
   };
@@ -42,7 +42,7 @@ describe("Mermaid batches", () => {
   it("keeps a diagram error local and can render another batch afterwards", async () => {
     const fake = engine();
     const render = createBatchRenderer(fake.api);
-    const result = await render({}, { ...SAMPLES, sequence: "broken" });
+    const result = await render({}, { ...SAMPLES, sequence: "sequenceDiagram\n broken" });
     expect(result?.diagrams.sequence).toEqual({ ok: false, error: "Invalid diagram" });
     expect(result?.diagrams.flowchart.ok).toBe(true);
     expect((await render({}))?.diagrams.sequence.ok).toBe(true);

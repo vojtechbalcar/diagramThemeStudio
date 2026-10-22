@@ -287,12 +287,15 @@ A two-column table: **Role** (Mermaid role, `body`) → **Token** (select showin
 - Footer (32px, `--lw-page` fill, top 1px rule): `micro` text "Fig. 1 — Flowchart" left; "Copy SVG" and "Open in Mermaid Live" right.
 - The footer may grow by one text row when its actions cannot fit beside the figure label. All actions keep a 24px minimum hit target.
 - Hover on the diagram: no zoom, no shadow. Click opens the card full-canvas (focus mode) with the source text editable in a mono panel on the right half.
+- Focus mode is a framed, inset-24px dialog with a band, a proofing pane on the left and source on the right. Below 768px it fills the viewport and stacks proofing above source. Escape/Close returns focus to the diagram trigger. Each diagram can be reset independently.
+- Source edits change structure and labels and persist for this session only; the theme share format remains unchanged. Copy SVG and Mermaid Live use the edited source. Matching diagram headers and a 30,000-character limit are enforced; init/frontmatter, source style overrides (including sequence rect/box groups) and link/click interactions are rejected so theme contrast stays governed by tokens.
 
 ### 3.5 Contrast annotations
 The proofing marks — the feature that makes Linework a designer's tool.
 - Every text/fill pair in a diagram gets an annotation in the card's **contrast list**, revealed by toggling "Show contrast" in the canvas toolbar (on by default).
 - Annotation = symbol (Pass / Large-only / Fail) + ratio (`mono`) + pair name (`small`): `✕ 2.9:1  Primary text on primary fill`.
 - In focus mode, annotations are drawn *on* the diagram as leader lines: a 1px line in the preview surface's ink (§1.2.5) from the element to a label tile (on-ink fill, 1px ink frame, `mono-small` in ink). Leader lines run horizontal or at 45° only, never at arbitrary angles.
+- Focus leaders anchor representative elements actually present in the SVG. Missing features have no leader; the complete theme-pair list remains below the proof. The annotation rail uses 176px tiles; on phones the proof scrolls horizontally within its pane. Leaders and tiles use preview-surface ink, independent of interface mode. Repeated SVG views receive separate IDs for CSS/markers.
 - Thresholds: WCAG 2.x — 4.5:1 normal text (AA), 3:1 large text and non-text elements such as lines against background, 7:1 shown as AAA.
 - Checks use Mermaid's resolved theme variables. Entity attributes include both alternating row fills; Gantt includes its section title and outside task text against the section fill composited at Mermaid's 20% opacity. These are separate pairs because derived fills can fail when the primary fill passes.
 

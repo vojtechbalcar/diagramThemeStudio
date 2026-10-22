@@ -3,7 +3,7 @@
 import { Segmented } from "@/components/system/segmented";
 import { Toggle } from "@/components/system/toggle";
 import { VerdictSymbol } from "@/components/system/verdict-symbol";
-import { DIAGRAMS } from "@/lib/theme/diagrams";
+import { DIAGRAMS, type DiagramKind } from "@/lib/theme/diagrams";
 import { buildThemeVariables } from "@/lib/theme/build-theme";
 import { checksFor, summarise, type PairCheck } from "@/lib/contrast/check";
 import type { Surface, TokenSet } from "@/lib/model";
@@ -12,9 +12,9 @@ import { DiagramCard } from "./diagram-card";
 
 const SURFACE_OPTIONS = [{ value: "paper", label: "Paper" }, { value: "ink", label: "Ink" }, { value: "brand", label: "Brand" }] as const;
 
-export function Canvas({ set, result, surface, checks, pending, error, showContrast, onShowContrast, onSurface, onReset, notify }: {
+export function Canvas({ set, result, surface, checks, pending, error, showContrast, onShowContrast, onSurface, onReset, notify, sources, onSource }: {
   set: TokenSet; result: BatchResult | null; surface: string; checks: readonly PairCheck[]; pending: boolean; error: string | null; showContrast: boolean;
-  onShowContrast: (show: boolean) => void; onSurface: (surface: Surface) => void; onReset: () => void; notify: (message: string) => void;
+  onShowContrast: (show: boolean) => void; onSurface: (surface: Surface) => void; sources: Readonly<Record<DiagramKind, string>>; onSource: (kind: DiagramKind, source: string) => void; onReset: (kind: DiagramKind) => void; notify: (message: string) => void;
 }) {
   const summary = summarise(checks);
   const variables = buildThemeVariables(set.tokens, set.mapping, { backdrop: surface });
@@ -27,6 +27,6 @@ export function Canvas({ set, result, surface, checks, pending, error, showContr
         <label className="flex items-center gap-2 type-small"><Toggle checked={showContrast} onCheckedChange={onShowContrast} aria-label="Show contrast" />Show contrast</label>
       </div>
     </div>
-    <div className="diagram-grid">{DIAGRAMS.map((diagram) => <DiagramCard key={diagram.kind} diagram={diagram} result={result?.diagrams[diagram.kind]} checks={checksFor(diagram.kind, checks)} surface={surface} setName={set.name} variables={variables} showContrast={showContrast} pending={pending} error={error} onReset={onReset} notify={notify} />)}</div>
+    <div className="diagram-grid">{DIAGRAMS.map((diagram) => <DiagramCard key={diagram.kind} diagram={diagram} result={result?.diagrams[diagram.kind]} checks={checksFor(diagram.kind, checks)} surface={surface} setName={set.name} variables={variables} showContrast={showContrast} pending={pending} error={error} onReset={() => onReset(diagram.kind)} notify={notify} source={sources[diagram.kind]} onSource={(source) => onSource(diagram.kind, source)} selectedSurface={set.surface} onSurface={onSurface} onShowContrast={onShowContrast} enabled={set.tokens.length > 0} />)}</div>
   </main>;
 }

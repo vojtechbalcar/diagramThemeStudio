@@ -1,6 +1,7 @@
 import { mermaidConfig, type MermaidConfig, type ThemeVariables } from "@/lib/theme/build-theme";
 import { DIAGRAMS, type DiagramKind } from "@/lib/theme/diagrams";
 import { SAMPLES } from "./samples";
+import { validateSource } from "./source";
 
 export type DiagramResult = { ok: true; svg: string } | { ok: false; error: string };
 export type BatchResult = { diagrams: Record<DiagramKind, DiagramResult>; variables: Record<string, string> };
@@ -36,6 +37,8 @@ export function createBatchRenderer(engine: MermaidEngine) {
       for (const diagram of DIAGRAMS) {
         if (signal?.aborted) return null;
         try {
+          const problem = validateSource(diagram.kind, sources[diagram.kind]);
+          if (problem) throw new Error(problem);
           const { svg } = await engine.render(`lw-${session}-${++nextId}`, sources[diagram.kind]);
           entries.push([diagram.kind, { ok: true, svg }]);
         } catch (error) {

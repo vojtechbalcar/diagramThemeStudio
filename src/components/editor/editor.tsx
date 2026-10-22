@@ -15,6 +15,8 @@ import { ColourStrip } from "./colour-strip";
 import { usePreview } from "./use-preview";
 import { ExportDrawer } from "./export-drawer";
 import { shareUrl } from "@/lib/state/url";
+import { SAMPLES } from "@/lib/mermaid/samples";
+import type { DiagramKind } from "@/lib/theme/diagrams";
 import { useEditorState } from "./use-editor-state";
 
 export function Editor() {
@@ -28,7 +30,8 @@ export function Editor() {
   const active = useRef(true);
   useLayoutEffect(() => { latestSet.current = set; active.current = true; return () => { active.current = false; }; }, [set]);
   const [sharing, setSharing] = useState(false);
-  const preview = usePreview(set);
+  const [sources, setSources] = useState<Readonly<Record<DiagramKind, string>>>(SAMPLES);
+  const preview = usePreview(set, sources);
   const onToken = useCallback((token: Token) => dispatch({ type: "token", token }), [dispatch]);
   const replace = useCallback((next: TokenSet) => { dispatch({ type: "replace", set: next }); setSelected(null); }, [dispatch]);
   useEffect(() => { if (!toast) return; const timer = setTimeout(() => setToast(""), 4000); return () => clearTimeout(timer); }, [toast]);
@@ -59,7 +62,7 @@ export function Editor() {
     </SystemBand>
     <div className="editor-workspace">
       <aside className="editor-sidebar">{panels}</aside>
-      <Canvas set={set} {...preview} showContrast={showContrast} onShowContrast={setShowContrast} onSurface={(surface) => dispatch({ type: "surface", surface })} onReset={preview.retry} notify={setToast} />
+      <Canvas set={set} {...preview} showContrast={showContrast} onShowContrast={setShowContrast} onSurface={(surface) => dispatch({ type: "surface", surface })} sources={sources} onSource={(kind, source) => setSources((current) => ({ ...current, [kind]: source }))} onReset={(kind) => { setSources((current) => ({ ...current, [kind]: SAMPLES[kind] })); preview.retry(); }} notify={setToast} />
     </div>
     <ColourStrip tokens={set.tokens} surface={preview.surface} selected={selected} onSelect={(id) => {
       setSelected(id);

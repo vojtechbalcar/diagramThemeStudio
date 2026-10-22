@@ -410,3 +410,38 @@
   .editor-export > div:not(.lw-band) { padding: 16px; }
   .title-block th, .title-block td { padding: 12px; }
 }
+
+/* Focus proofing — design.md §3.4–3.5. */
+@layer components {
+  .diagram-open { position: absolute; inset: 0; width: 100%; height: 100%; cursor: pointer; }
+  .diagram-open:disabled { cursor: default; }
+  .diagram-open:focus-visible { outline-offset: -4px; }
+  .diagram-open-label { position: absolute; right: 12px; bottom: 12px; padding: 4px 8px; border: 1px solid currentColor; color: var(--lw-ink); background: var(--lw-on-ink); font: 600 11px/16px var(--lw-font-sans); opacity: 0; }
+  .diagram-open:hover:not(:disabled) .diagram-open-label, .diagram-open:focus-visible .diagram-open-label { opacity: 1; }
+  .diagram-focus { position: fixed; z-index: 51; inset: 24px; display: flex; flex-direction: column; border: 2px solid var(--lw-ink); background: var(--lw-page); }
+  .diagram-focus > .lw-band { flex-shrink: 0; }
+  .focus-workspace { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); flex: 1; min-height: 0; }
+  .focus-preview { position: relative; min-width: 0; overflow: auto; }
+  .focus-scroll { overflow-x: auto; }
+  .focus-proof { position: relative; display: flex; align-items: center; min-height: 432px; padding: 24px; }
+  .focus-proof.has-annotations { min-width: 560px; }
+  .focus-picture { display: flex; align-items: center; justify-content: center; min-height: 384px; }
+  .focus-picture > svg { max-height: 480px; }
+  .has-annotations .focus-picture { width: calc(100% - 208px); }
+  .contrast-leaders { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .contrast-leader { fill: none; stroke: var(--lw-ink); stroke-width: 1px; }
+  .contrast-tile { position: absolute; right: 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; width: 176px; min-height: 48px; padding: 4px 8px; border: 1px solid var(--lw-ink); color: var(--lw-ink); background: var(--lw-on-ink); font: 500 11px/16px var(--lw-font-mono); }
+  .contrast-tile svg { width: 16px; height: 16px; }
+  .focus-source { display: flex; flex-direction: column; min-width: 0; overflow: auto; border-left: 1px solid var(--lw-rule-color); }
+  .focus-source .source-field { flex: 1; min-height: 256px; height: auto; border-inline: 0; border-bottom: 0; }
+  .focus-source textarea { height: 100%; min-height: 256px; }
+  .focus-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; padding: 16px; border-top: 1px solid var(--lw-rule-color); }
+  .focus-progress { height: 2px; background: var(--lw-ink); transform-origin: left; animation: lw-render var(--lw-dur-slow) var(--lw-ease) both; }
+}
+@media (max-width: 767px) {
+  .diagram-focus { inset: 0; border: 0; }
+  .focus-workspace { display: block; overflow-y: auto; }
+  .focus-source { border-left: 0; border-top: 2px solid var(--lw-ink); }
+  .focus-source .source-field { height: 320px; flex: none; }
+  .diagram-open-label { opacity: 1; }
+}
