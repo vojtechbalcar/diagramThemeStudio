@@ -6,6 +6,7 @@ import {
   contrastMessage,
   outcomeOf,
   summarise,
+  worstCheck,
   type ColourLookup,
 } from "@/lib/contrast/check";
 import { CONTRAST_PAIRS, type ContrastPair, type ThemeVariable } from "@/lib/theme/roles";
@@ -73,6 +74,13 @@ describe("checkPair", () => {
     expect(checkPair(pair("primary-text"), lookup({ nodeTextColor: "#FFFFFF" }), "#FFFFFF")).toBeNull();
     expect(checkPair(pair("primary-text"), lookup({ nodeTextColor: "nope", mainBkg: "#FFF" }), "#FFFFFF")).toBeNull();
   });
+
+  it("checks the ER attribute fills and composites the Gantt section behind text", () => {
+    const checks = checkPairs(lookup({ nodeTextColor: "#FFFFFF", rowOdd: "#BFBFBF", rowEven: "#0D0D0D", textColor: "#FFFFFF", sectionBkgColor: "#000000" }), "#FFFFFF");
+    expect(checks.find((check) => check.pair.id === "attribute-odd")?.outcome).toBe("fail");
+    expect(checks.find((check) => check.pair.id === "attribute-even")?.outcome).toBe("pass");
+    expect(checks.find((check) => check.pair.id === "section-text")?.background).toBe("#CCCCCC");
+  });
 });
 
 describe("summaries and messages", () => {
@@ -103,6 +111,15 @@ describe("summaries and messages", () => {
     expect(summarise(checks)).toEqual({ pairs: 6, pass: 4, large: 0, fail: 2, worst: "fail" });
     expect(summarise(checksFor("er", checks))).toEqual({ pairs: 3, pass: 2, large: 0, fail: 1, worst: "fail" });
     expect(summarise([])).toEqual({ pairs: 0, pass: 0, large: 0, fail: 0, worst: null });
+  });
+
+  it("ranks failed text above lower-ratio non-text that passes its threshold", () => {
+    const text = checkPair(pair("primary-text"), lookup({ nodeTextColor: "#777777", mainBkg: "#FFFFFF" }), "#FFFFFF")!;
+    const line = checkPair(pair("line-on-background"), lookup({ lineColor: "#888888" }), "#FFFFFF")!;
+    expect(text.outcome).toBe("large");
+    expect(line.outcome).toBe("pass");
+    expect(line.ratio).toBeLessThan(text.ratio);
+    expect(worstCheck([line, text])).toBe(text);
   });
 
   it("writes messages like a sign", () => {

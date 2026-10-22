@@ -4,6 +4,7 @@ import { ROLES, TokenSetSchema } from "@/lib/model";
 import { buildThemeVariables, surfaceHex, type ThemeVariables } from "@/lib/theme/build-theme";
 import { presetById, PRESETS } from "@/lib/tokens/presets";
 import { describeTokens } from "@/lib/tokens/summary";
+import type { ThemeVariable } from "@/lib/theme/roles";
 
 /**
  * The variables the pairs read, as Mermaid 12's base theme derives them
@@ -12,7 +13,7 @@ import { describeTokens } from "@/lib/tokens/summary";
  * values read back from Mermaid itself.
  */
 function mermaidLookup(vars: ThemeVariables): ColourLookup {
-  const derived = {
+  const derived: Partial<Record<ThemeVariable, string | undefined>> = {
     mainBkg: vars.primaryColor,
     nodeTextColor: vars.primaryTextColor,
     nodeBorder: vars.primaryBorderColor,

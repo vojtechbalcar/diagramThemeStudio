@@ -49,8 +49,9 @@ function opaque(value: string | undefined, backdrop: string): string | null {
 
 /** Check one pair; null when either colour is missing or unreadable. */
 export function checkPair(pair: ContrastPair, lookup: ColourLookup, surface: string): PairCheck | null {
-  const background = pair.background === "surface" ? surface : opaque(lookup(pair.background), surface);
-  if (!background) return null;
+  const fill = pair.background === "surface" ? surface : opaque(lookup(pair.background), surface);
+  if (!fill) return null;
+  const background = pair.backgroundOpacity === undefined ? fill : composite(fill, pair.backgroundOpacity, surface);
   const foreground = opaque(lookup(pair.foreground), background);
   if (!foreground) return null;
   const ratio = contrastRatio(foreground, background);
@@ -64,6 +65,12 @@ export function checkPairs(lookup: ColourLookup, surface: string, pairs = CONTRA
 
 export function checksFor(diagram: DiagramKind, checks: readonly PairCheck[]): PairCheck[] {
   return checks.filter((check) => check.pair.diagrams.includes(diagram));
+}
+
+/** Text and non-text have different thresholds; compare outcomes before ratios. */
+export function worstCheck(checks: readonly PairCheck[]): PairCheck | undefined {
+  const priority: Record<Outcome, number> = { fail: 0, large: 1, pass: 2 };
+  return [...checks].sort((a, b) => priority[a.outcome] - priority[b.outcome] || a.ratio - b.ratio)[0];
 }
 
 export type CheckSummary = {

@@ -70,7 +70,10 @@ export type ThemeVariable =
   | "lineColor"
   | "edgeLabelBackground"
   | "clusterBkg"
-  | "titleColor";
+  | "titleColor"
+  | "rowOdd"
+  | "rowEven"
+  | "sectionBkgColor";
 
 export type ContrastPair = {
   id: string;
@@ -83,6 +86,8 @@ export type ContrastPair = {
   foreground: ThemeVariable;
   /** "surface" is the preview surface the diagram sits on (§1.2.3). */
   background: ThemeVariable | "surface";
+  /** Mermaid draws the Gantt section fill at 20% opacity over the surface. */
+  backgroundOpacity?: number;
   /** The roles that decide this pair, for the mapping panel's contrast symbols. */
   roles: readonly Role[];
   /** Where the pair appears, for each card's contrast list and summary. */
@@ -161,6 +166,48 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
     background: "surface",
     roles: ["primaryBorderColor", "background"],
     diagrams: ["sequence"],
+  },
+  {
+    id: "attribute-odd",
+    name: "Attribute text on odd rows",
+    short: "Odd-row attribute text",
+    kind: "text",
+    foreground: "nodeTextColor",
+    background: "rowOdd",
+    roles: ["primaryTextColor", "primaryColor"],
+    diagrams: ["er"],
+  },
+  {
+    id: "attribute-even",
+    name: "Attribute text on even rows",
+    short: "Even-row attribute text",
+    kind: "text",
+    foreground: "nodeTextColor",
+    background: "rowEven",
+    roles: ["primaryTextColor", "primaryColor"],
+    diagrams: ["er"],
+  },
+  {
+    id: "section-text",
+    name: "Task text on section fill",
+    short: "Text on section",
+    kind: "text",
+    foreground: "textColor",
+    background: "sectionBkgColor",
+    backgroundOpacity: 0.2,
+    roles: ["primaryTextColor", "secondaryColor", "background"],
+    diagrams: ["gantt"],
+  },
+  {
+    id: "section-title",
+    name: "Section title on section fill",
+    short: "Section title",
+    kind: "text",
+    foreground: "titleColor",
+    background: "sectionBkgColor",
+    backgroundOpacity: 0.2,
+    roles: ["tertiaryColor", "secondaryColor", "background"],
+    diagrams: ["gantt"],
   },
 ];
 
