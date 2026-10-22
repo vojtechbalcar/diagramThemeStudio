@@ -358,6 +358,10 @@ Bottom-left, above the colour strip. A mini-band: 48px `--lw-band` fill, `--lw-b
 2. Hero: `title` "Diagrams in your brand's colours." + one `body` line + primary button "Open the editor" with arrow tile. Right side: a live, auto-cycling 2×2 of sign panels re-theming every 3s through the presets.
 3. Three-step row with outline step bullets 1–2–3.
 4. Colour strip of the current preset as the page footer.
+The live preview starts with Signal and offers all four presets as named, joined controls. Its sign panels use a compact 256px minimum height and omit editor-only actions and contrast lists; their bands still show the current shape/count verdict. Below 1024px the introduction sits above the 2×2 preview; below 768px panels and steps stack, and preset controls become two columns. The palette footer is a read-only view of the current preset.
+
+The 3-second cycle pauses on hover, keyboard focus, an explicit Pause control, a hidden page or reduced motion. Manual preset selection remains available. Automatic changes are not live-announced; pause guidance is visible. Initial loading keeps panel structure visible, and failures offer Retry preview.
+
 No testimonials, no logos wall, no pricing.
 
 ---
@@ -565,6 +569,10 @@ Before a UI change is done, check:
 
 ## Appendix B — Changelog
 Every change to this manual, newest first. Say what changed and why, so later readers can tell a decision from an accident.
+
+### 22 Oct 2026 — Milestone 5 focus, motion and landing
+
+Specified local source editing, theme-preserving source limits, representative SVG proofing leaders, independent reset and focus return. Finalized phone views, preview crossfades, finite feedback motion, wrapped toasts and the live landing page's compact panels, preset controls and pause conditions.
 
 ### 22 Oct 2026 — Milestone 4 export and share
 
