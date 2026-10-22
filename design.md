@@ -258,7 +258,7 @@ Messages read like a sign: what is happening, then what to do.
 - **Canvas:** toolbar + 2×2 grid of sign panels; grid becomes 1 column below 1024px of canvas width. Cards are equal height (min 360px).
 - **Colour strip:** fixed bottom, 48px.
 
-The editor exposes Import, Share link, Export and the mode toggle in the system band, with the set name edited in the token panel. Below 768px, Import moves into the Tokens drawer and sharing is available in Export's Share link tab; the Export trigger becomes its named 48px arrow tile so the band still fits a 320px screen.
+The editor exposes Import, Share link, Export and the mode toggle in the system band, with the set name edited in the token panel. Below 768px, Import moves into the Tokens view, sharing is available in the Export view's Share link tab, and the system band keeps only the name and mode toggle. A joined Tokens / Canvas / Export control follows the band.
 
 ### 3.2 Token panel
 **Token row** (height `M`):
@@ -377,6 +377,7 @@ Transit motion is the train, not the sign. Signs don't move. Motion in Linework 
 
 - Debounce re-rendering 120ms after the last keystroke in a hex field; colour-picker drags update at most every 50ms.
 - `prefers-reduced-motion: reduce` → all durations 0, staggers removed.
+- Renders crossfade within each card for 160ms, with 0/30/60/90ms delays. The outgoing picture is hidden from assistive technology and discarded after the transition; contrast numbers change immediately. Dialog scrims, drawer slides, verdict symbols and toast entrances use the finite timings above. Wrapped toasts can grow beyond 48px to keep failure guidance readable.
 - Nothing loops, bounces, springs, or parallaxes in the editor. The landing hero cycle is the only repeating motion and stops on hover and under reduced motion.
 
 ---
@@ -392,7 +393,7 @@ Transit motion is the train, not the sign. Signs don't move. Motion in Linework 
 
 Bands keep 48px height at every size. Text sizes do not scale down below the scale in §1.3.2.
 
-Editor v1 uses a Tokens drawer below 1024px, including phones. It keeps the canvas and import control available while export is built in milestone 4; the final phone view segments follow in milestone 5. The card grid uses two columns when the canvas has at least 640px of available width and one below that, resolving the conflict between the canvas-width condition in §3.1 and the viewport breakpoints above.
+The final editor uses a Tokens drawer from 768–1023px and joined Tokens / Canvas / Export view segments below 768px. Canvas is the initial phone view and explains how to add tokens. Selecting a palette block switches to Tokens and focuses its value; the full-height workspace scrolls independently above the persistent palette strip. Export reuses the desktop drawer contents as a single phone view. The card grid uses two columns when the canvas has at least 640px of available width and one below that, resolving the conflict between the canvas-width condition in §3.1 and the viewport breakpoints above.
 
 ---
 

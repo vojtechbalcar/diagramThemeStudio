@@ -18,8 +18,7 @@ export function Canvas({ set, result, surface, checks, pending, error, showContr
 }) {
   const summary = summarise(checks);
   const variables = buildThemeVariables(set.tokens, set.mapping, { backdrop: surface });
-  return <main className="editor-canvas">
-    <h1 className="sr-only">Theme editor</h1>
+  return <section className="editor-canvas" aria-label="Canvas">
     <div className="canvas-toolbar">
       <div className="flex items-center gap-3"><span className="type-small">Surface</span><Segmented name="preview-surface" legend="Preview surface" options={SURFACE_OPTIONS} value={set.surface} onValueChange={onSurface} className="surface-segments" /></div>
       <div className="flex items-center gap-4">
@@ -27,6 +26,7 @@ export function Canvas({ set, result, surface, checks, pending, error, showContr
         <label className="flex items-center gap-2 type-small"><Toggle checked={showContrast} onCheckedChange={onShowContrast} aria-label="Show contrast" />Show contrast</label>
       </div>
     </div>
+    {!set.tokens.length ? <p className="canvas-empty border-b border-rule bg-page px-6 py-4 type-small"><strong>No tokens yet.</strong> Paste a token file or start from a preset in Tokens.</p> : null}
     <div className="diagram-grid">{DIAGRAMS.map((diagram) => <DiagramCard key={diagram.kind} diagram={diagram} result={result?.diagrams[diagram.kind]} checks={checksFor(diagram.kind, checks)} surface={surface} setName={set.name} variables={variables} showContrast={showContrast} pending={pending} error={error} onReset={() => onReset(diagram.kind)} notify={notify} source={sources[diagram.kind]} onSource={(source) => onSource(diagram.kind, source)} selectedSurface={set.surface} onSurface={onSurface} onShowContrast={onShowContrast} enabled={set.tokens.length > 0} />)}</div>
-  </main>;
+  </section>;
 }

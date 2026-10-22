@@ -18,7 +18,7 @@ export type VerdictSymbolProps = {
 /** The symbol for a contrast verdict, named for assistive technology. Always shown with the ratio. */
 export function VerdictSymbol({ verdict, className }: VerdictSymbolProps) {
   const label = LABEL[verdict];
-  if (verdict === "fail") return <SymbolFail label={label} className={className} />;
-  if (verdict === "large") return <SymbolLargeOnly label={label} className={className} />;
-  return <SymbolPass label={label} className={className} />;
+  return <span key={verdict} className={`verdict-mark ${className ?? ""}`}>
+    {verdict === "fail" ? <SymbolFail label={label} /> : verdict === "large" ? <SymbolLargeOnly label={label} /> : <SymbolPass label={label} />}
+  </span>;
 }

@@ -75,5 +75,5 @@ test("rapid source edits settle on the newest text and reset stays local", async
   await focus.getByRole("button", { name: "Reset this diagram", exact: true }).click();
   await expect(focus.getByRole("img", { name: /Flowchart preview/ })).toContainText("Add tokens");
   await page.keyboard.press("Escape");
-  await expect(page.locator('[data-diagram="sequence"] .diagram-svg')).toContainText("Preserve me");
+  await expect(page.locator('[data-diagram="sequence"] .diagram-picture-current')).toContainText("Preserve me");
 });

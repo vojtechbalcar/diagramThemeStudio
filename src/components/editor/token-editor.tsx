@@ -33,7 +33,7 @@ export function TokenEditor({ token, onChange }: { token: Token; onChange: (toke
 
   return <div className="grid gap-3 border-b border-rule bg-recess p-4" onBlur={commitDraft}>
     <label className="grid gap-2 type-small" htmlFor={`${id}-value`}>Value for {token.path}
-      <Input ref={input} id={`${id}-value`} density="dense" mono value={value} maxLength={300} aria-invalid={invalid} aria-describedby={invalid ? `${id}-error` : undefined}
+      <Input data-token-value ref={input} id={`${id}-value`} density="dense" mono value={value} maxLength={300} aria-invalid={invalid} aria-describedby={invalid ? `${id}-error` : undefined}
         onChange={(event) => {
           const nextValue = event.target.value;
           setValue(nextValue);

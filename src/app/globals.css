@@ -405,8 +405,6 @@
   .diagram-grid { padding: 16px; gap: 16px; }
   .canvas-toolbar { padding-inline: 16px; }
   .editor-shell > header > div:first-of-type { min-width: 0; }
-  .export-trigger { padding-left: 0; gap: 0; }
-  .export-trigger-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
   .editor-export > div:not(.lw-band) { padding: 16px; }
   .title-block th, .title-block td { padding: 12px; }
 }
@@ -444,4 +442,35 @@
   .focus-source { border-left: 0; border-top: 2px solid var(--lw-ink); }
   .focus-source .source-field { height: 320px; flex: none; }
   .diagram-open-label { opacity: 1; }
+}
+
+/* Final editor views and finite motion — design.md §4–5. */
+@layer components {
+  .editor-phone-tokens, .editor-phone-export { display: none; }
+  .editor-view-nav { flex-shrink: 0; background: var(--lw-page); }
+  .editor-view-nav fieldset { border-inline: 0; }
+  .editor-view-nav label { flex: 1; justify-content: center; }
+  .diagram-picture { position: relative; width: 100%; }
+  .diagram-picture-current { animation: lw-picture-in var(--lw-dur) var(--lw-ease) calc(var(--picture-order) * var(--lw-stagger)) both; }
+  .diagram-picture-previous { position: absolute; inset: 0; display: flex; align-items: center; pointer-events: none; animation: lw-picture-out var(--lw-dur) var(--lw-ease) calc(var(--picture-order) * var(--lw-stagger)) both; }
+  .verdict-mark { display: inline-flex; flex-shrink: 0; animation: lw-verdict var(--lw-dur-fast) var(--lw-ease); }
+  .editor-scrim[data-state="open"] { animation: lw-scrim-in var(--lw-dur-fast) var(--lw-ease); }
+  .editor-scrim[data-state="closed"] { animation: lw-scrim-out var(--lw-dur-fast) var(--lw-ease); }
+  .editor-drawer[data-state="open"] { animation: lw-drawer-in var(--lw-dur-slow) var(--lw-ease); }
+  .editor-drawer[data-state="closed"] { animation: lw-drawer-out var(--lw-dur) var(--lw-ease); }
+  .editor-toast > .lw-band { height: auto; min-height: 48px; padding-block: 16px 12px; animation: lw-toast-in var(--lw-dur) var(--lw-ease); }
+}
+@keyframes lw-picture-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lw-picture-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes lw-verdict { from { transform: scale(0.8); } to { transform: scale(1); } }
+@keyframes lw-scrim-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes lw-scrim-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes lw-drawer-in { from { transform: translateX(-100%); } to { transform: translateX(0); } }
+@keyframes lw-drawer-out { from { transform: translateX(0); } to { transform: translateX(-100%); } }
+@keyframes lw-toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+@media (max-width: 767px) {
+  .editor-workspace[data-phone-view="tokens"] .editor-phone-tokens,
+  .editor-workspace[data-phone-view="export"] .editor-phone-export { display: block; flex: 1; min-width: 0; overflow-y: auto; }
+  .editor-workspace:not([data-phone-view="canvas"]) .editor-canvas { display: none; }
+  .editor-phone-export .export-panel { padding: 16px; }
 }

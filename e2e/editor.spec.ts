@@ -28,7 +28,7 @@ test("import, map and edit a theme across all four live previews", async ({ page
   await value.blur();
   await expect(value).toHaveValue("#123456");
   await expect(page.locator(".diagram-body[aria-busy='true']")).toHaveCount(0);
-  await expect(page.locator("[data-diagram='flowchart'] .diagram-svg svg")).toContainText("Add tokens");
+  await expect(page.locator("[data-diagram='flowchart'] .diagram-picture-current svg")).toContainText("Add tokens");
   await expect.poll(async () => (await page.locator("[data-diagram='flowchart'] svg style").allTextContents()).join("")).toContain("#123456");
   await page.getByRole("switch", { name: "Show contrast" }).click();
   await expect(page.getByRole("region", { name: "Flowchart contrast" })).toHaveCount(0);
@@ -66,11 +66,12 @@ test("presets, colour strip selection, manual tokens and keyboard dialogs", asyn
 test("the editor fits a phone and keeps token controls accessible", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/editor");
-  await page.getByRole("button", { name: "Tokens", exact: true }).click();
-  const panel = page.getByRole("dialog", { name: "Tokens and mapping" });
+  const views = page.getByRole("group", { name: "Editor view" });
+  await views.getByText("Tokens", { exact: true }).click();
+  const panel = page.getByRole("region", { name: "Tokens and mapping", exact: true });
   await expect(panel).toBeVisible();
   await panel.getByRole("button", { name: "Use Night preset" }).click();
-  await page.keyboard.press("Escape");
+  await views.getByText("Canvas", { exact: true }).click();
   await expect(page.locator(".diagram-body svg")).toHaveCount(4);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });

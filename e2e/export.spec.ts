@@ -183,11 +183,11 @@ test("export tabs and the share output work on a narrow dark screen", async ({ p
   await page.setViewportSize({ width: 320, height: 740 });
   await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });
   await page.goto("/editor");
-  await page.getByRole("button", { name: "Tokens", exact: true }).click();
-  await page.getByRole("dialog", { name: "Tokens and mapping" }).getByRole("button", { name: "Use Night preset" }).click();
-  await page.keyboard.press("Escape");
-  await page.getByRole("button", { name: "Export", exact: true }).click();
-  const drawer = page.getByRole("dialog", { name: "Export", exact: true });
+  const views = page.getByRole("group", { name: "Editor view" });
+  await views.getByText("Tokens", { exact: true }).click();
+  await page.getByRole("region", { name: "Tokens and mapping", exact: true }).getByRole("button", { name: "Use Night preset" }).click();
+  await views.getByText("Export", { exact: true }).click();
+  const drawer = page.getByRole("region", { name: "Export", exact: true });
   await drawer.getByRole("tab", { name: "Init directive", exact: true }).focus();
   await page.keyboard.press("ArrowRight");
   await expect(drawer.getByRole("tab", { name: "mermaid.initialize()", exact: true })).toHaveAttribute("aria-selected", "true");

@@ -13,6 +13,7 @@ import { INK, PAPER, type ThemeVariables } from "@/lib/theme/build-theme";
 import type { DIAGRAMS } from "@/lib/theme/diagrams";
 import type { DiagramResult } from "@/lib/mermaid/batch";
 import type { Surface } from "@/lib/model";
+import { DiagramPicture } from "./diagram-picture";
 import { FocusMode } from "./focus-mode";
 import { liveLink } from "@/lib/mermaid/live-link";
 import type { CSSProperties } from "react";
@@ -33,7 +34,7 @@ export function DiagramCard({ diagram, result, checks, surface, setName, variabl
     </Band>
     <div className="diagram-body" style={style} aria-busy={pending}>
       {problem ? <div className="pointer-events-none relative z-10 max-w-full"><SymbolWarning /><p className="mt-3 break-words type-mono-small">{problem}</p><Button variant="text" className="pointer-events-auto mt-4" onClick={onReset}>Reset this diagram</Button></div>
-        : result?.ok ? <div className="diagram-svg" role="img" aria-label={`${diagram.name} preview, themed with ${setName || "Untitled set"}`} dangerouslySetInnerHTML={{ __html: result.svg }} />
+        : result?.ok ? <DiagramPicture svg={result.svg} index={diagram.index} label={`${diagram.name} preview, themed with ${setName || "Untitled set"}`} />
         : <div><span className="empty-numeral type-display" aria-hidden="true">{diagram.index}</span><p className="mt-4 type-small">{pending ? "Rendering your theme…" : "Add tokens to preview your theme."}</p></div>}
     <FocusMode diagram={diagram} result={result} checks={checks} source={source} onSource={onSource} onReset={onReset} surface={selectedSurface} onSurface={onSurface} style={style} setName={setName} pending={pending} error={error} showContrast={showContrast} onShowContrast={onShowContrast} variables={variables} notify={notify} enabled={enabled} />
       {pending ? <span className="render-progress" role="status"><span className="sr-only">Rendering {diagram.name}</span></span> : null}
