@@ -30,6 +30,7 @@ describe("editor state", () => {
     expect(editorReducer(state, { type: "token", token: { ...colour, value: "broken" } })).toBe(state);
     expect(editorReducer(state, { type: "map", role: "fontFamily", tokenId: colour.id })).toBe(state);
     expect(editorReducer(state, { type: "map", role: "primaryColor", tokenId: "missing" })).toBe(state);
+    expect(editorReducer(state, { type: "name", name: "x".repeat(81) })).toBe(state);
   });
 
   it("confirms guesses, preserves confirmed mappings during auto-map, and unmaps to Derived", () => {
@@ -45,8 +46,13 @@ describe("editor state", () => {
     expect(editToken(translucent, "#abc", "  color.brand  ")).toMatchObject({ value: "#AABBCC", path: "color.brand", alpha: 0.4 });
     expect(editToken(translucent, "#abc8")?.alpha).toBeCloseTo(0.5333, 3);
     expect(editToken(translucent, "#abc", colour.path, 1)?.alpha).toBeUndefined();
+    expect(editToken(translucent, "#abcF")?.alpha).toBeUndefined();
+    expect(editToken(translucent, "#AABBCCFF")?.alpha).toBeUndefined();
+    expect(editToken(translucent, "rgba(255, 0, 0, 1)")?.alpha).toBeUndefined();
     expect(editToken(colour, "not a colour")).toBeNull();
     expect(editToken(colour, "#fff", "")).toBeNull();
+    expect(editToken(colour, "#fff", colour.path, 1.01)).toBeNull();
+    expect(editToken(colour, "#fff", colour.path, Number.NaN)).toBeNull();
   });
 
   it("normalises typography and rejects unusable values", () => {
@@ -65,5 +71,11 @@ describe("import format selection", () => {
     expect(importTokens("dtcg", '{"brand":{"$type":"color","$value":"#123456"}}').ok).toBe(true);
     expect(importTokens("figma", '{"brand":{"$type":"color","$value":"#123456"}}').ok).toBe(true);
     expect(importTokens("dtcg", "not JSON").ok).toBe(false);
+  });
+
+  it("rejects oversized imports and invalid token values before creating editor state", () => {
+    const excessive = Array.from({ length: 1001 }, (_, index) => `--brand-${index}: #fff;`).join("\n");
+    expect(importTokens("css", excessive).ok).toBe(false);
+    expect(importTokens("css", `--${"x".repeat(301)}: #fff;`).ok).toBe(false);
   });
 });

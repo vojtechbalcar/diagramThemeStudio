@@ -1,7 +1,7 @@
 import { ROLE_TOKEN_TYPE, TokenSchema, TokenSetSchema, type Role, type Surface, type Token, type TokenSet } from "@/lib/model";
 import { automap } from "@/lib/theme/automap";
 import { defaultSurface } from "@/lib/theme/build-theme";
-import { normaliseCssColour } from "@/lib/tokens/colour";
+import { hasExplicitAlpha, normaliseCssColour } from "@/lib/tokens/colour";
 import { dimensionToPx, isFontStack, normaliseDimensionString, normaliseFontFamily } from "@/lib/tokens/values";
 
 export function createEditorSet(tokens: Token[] = []): TokenSet {
@@ -14,9 +14,10 @@ export function editToken(token: Token, input: string, path = token.path, alpha?
   let next: Token;
   const value = input.trim();
   if (token.type === "color") {
+    if (alpha !== undefined && (!Number.isFinite(alpha) || alpha < 0 || alpha > 1)) return null;
     const colour = normaliseCssColour(value);
     if (!colour) return null;
-    const opacity = alpha ?? colour.alpha ?? token.alpha;
+    const opacity = alpha ?? colour.alpha ?? (hasExplicitAlpha(value) ? 1 : token.alpha);
     next = { id: token.id, path: path.trim(), type: token.type, source: token.source, value: colour.hex,
       ...(opacity !== undefined && opacity < 1 ? { alpha: opacity } : {}) };
   } else if (token.type === "dimension") {
@@ -47,7 +48,7 @@ export function editorReducer(state: TokenSet, action: EditorAction): TokenSet {
       return parsed.success ? parsed.data : state;
     }
     case "name":
-      return action.name.length <= 300 ? { ...state, name: action.name } : state;
+      return action.name.length <= 80 ? { ...state, name: action.name } : state;
     case "token": {
       const parsed = TokenSchema.safeParse(action.token);
       if (!parsed.success) return state;

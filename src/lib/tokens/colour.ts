@@ -121,6 +121,11 @@ export function normaliseCssColour(input: string): NormalisedColour | null {
   return parsed ? finish(parsed) : null;
 }
 
+/** Distinguishes an explicitly opaque colour from a hex-only edit preserving opacity. */
+export function hasExplicitAlpha(input: string): boolean {
+  return parse(input.trim())?.alpha !== undefined;
+}
+
 function channel(value: Component | undefined): number | undefined {
   return value === "none" ? undefined : value;
 }
