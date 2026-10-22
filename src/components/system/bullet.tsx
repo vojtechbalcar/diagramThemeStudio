@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 import { tokenBulletLook } from "@/lib/contrast/token-bullet";
-import type { TokenGlyph } from "@/lib/system/specimen";
+import type { TokenGlyph } from "@/lib/theme/roles";
 
 export type BulletSize = "large" | "standard" | "small";
 

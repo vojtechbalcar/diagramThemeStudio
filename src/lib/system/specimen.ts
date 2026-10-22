@@ -3,7 +3,7 @@
  * any company's palette (design.md §8).
  */
 
-export type TokenGlyph = "P" | "S" | "T" | "L" | "B" | "N";
+import type { TokenGlyph } from "@/lib/theme/roles";
 
 export type SampleToken = {
   glyph: TokenGlyph;
