@@ -258,12 +258,15 @@ Messages read like a sign: what is happening, then what to do.
 - **Canvas:** toolbar + 2×2 grid of sign panels; grid becomes 1 column below 1024px of canvas width. Cards are equal height (min 360px).
 - **Colour strip:** fixed bottom, 48px.
 
+Editor v1 exposes Import and the mode toggle in the system band, with the set name edited in the token panel. Share link and Export join the band in milestone 4.
+
 ### 3.2 Token panel
 **Token row** (height `M`):
 `[bullet 24] [token name, body] ........ [hex, mono] [swatch-edit]`
 - Hover: row fill `--lw-recess`.
 - Selected/editing: row inverted (`--lw-ink` fill, `--lw-on-ink` text; an inverted scope, §1.2.5); an inline editor opens below the row: hex input, native colour picker trigger (styled as a 24px square swatch with 1px ink frame), and the token path.
 - Focus: inset ring (§1.2.6).
+- An unmapped colour token has an empty colour bullet until it has a role; no placeholder letter is invented.
 - Invalid value: hex text in `--lw-signal` + Warning symbol + message on the following line in `small`.
 - Rows are separated by 1px rules. No cards, no pills.
 
@@ -282,6 +285,7 @@ A two-column table: **Role** (Mermaid role, `body`) → **Token** (select showin
 - Band: index bullet (numeral; inverted by the band's ink scope) + diagram name + right side contrast summary: worst result symbol + count, e.g. `✕ 1` or `● 3`.
 - Body: the rendered SVG on the chosen preview surface, padding 24px, centred **within the card** (the only centred object in the system — a diagram is a picture, not text). The body is a preview-surface ink scope (§1.2.5).
 - Footer (32px, `--lw-page` fill, top 1px rule): `micro` text "Fig. 1 — Flowchart" left; "Copy SVG" and "Open in Mermaid Live" right.
+- The footer may grow by one text row when its actions cannot fit beside the figure label. All actions keep a 24px minimum hit target.
 - Hover on the diagram: no zoom, no shadow. Click opens the card full-canvas (focus mode) with the source text editable in a mono panel on the right half.
 
 ### 3.5 Contrast annotations
@@ -290,9 +294,12 @@ The proofing marks — the feature that makes Linework a designer's tool.
 - Annotation = symbol (Pass / Large-only / Fail) + ratio (`mono`) + pair name (`small`): `✕ 2.9:1  Primary text on primary fill`.
 - In focus mode, annotations are drawn *on* the diagram as leader lines: a 1px line in the preview surface's ink (§1.2.5) from the element to a label tile (on-ink fill, 1px ink frame, `mono-small` in ink). Leader lines run horizontal or at 45° only, never at arbitrary angles.
 - Thresholds: WCAG 2.x — 4.5:1 normal text (AA), 3:1 large text and non-text elements such as lines against background, 7:1 shown as AAA.
+- Checks use Mermaid's resolved theme variables. Entity attributes include both alternating row fills; Gantt includes its section title and outside task text against the section fill composited at Mermaid's 20% opacity. These are separate pairs because derived fills can fail when the primary fill passes.
 
 ### 3.6 Colour strip
 Fixed bar along the bottom: every colour token as a 48px-high block, width proportional (equal widths). Below each block, inside it, the hex in `mono-small`, colour auto black/white. Clicking a block selects that token in the panel. It is the "line map" of the palette — the Dribbble shot lives here.
+
+Blocks have a 96px minimum width to keep six-digit hex values readable; the strip scrolls horizontally when the palette cannot fit. The selected block has a small outline square, so selection does not depend on colour.
 
 ### 3.7 Dialogs, drawers, menus
 - **Export drawer:** slides from the right, 2px ink left frame, band header "Export", body is a title block (§3.8) followed by output tabs: "Init directive", "mermaid.initialize()", "JSON", "Share link". Each tab: mono code block with a Copy button (arrow-free text button + Copy symbol) at top right.
@@ -371,6 +378,8 @@ Transit motion is the train, not the sign. Signs don't move. Motion in Linework 
 | < 768 | Single column: system band → segmented control "Tokens · Canvas · Export" → one view at a time. Cards stack 1-up. Colour strip stays fixed at the bottom (scrolls horizontally if > 8 tokens). |
 
 Bands keep 48px height at every size. Text sizes do not scale down below the scale in §1.3.2.
+
+Editor v1 uses a Tokens drawer below 1024px, including phones. It keeps the canvas and import control available while export is built in milestone 4; the final phone view segments follow in milestone 5. The card grid uses two columns when the canvas has at least 640px of available width and one below that, resolving the conflict between the canvas-width condition in §3.1 and the viewport breakpoints above.
 
 ---
 
@@ -542,6 +551,10 @@ Before a UI change is done, check:
 
 ## Appendix B — Changelog
 Every change to this manual, newest first. Say what changed and why, so later readers can tell a decision from an accident.
+
+### 22 Oct 2026 — Milestone 3 editor
+
+Clarified the staged editor band and phone drawer, a 640px canvas grid threshold, empty bullets for unmapped colours, wrapping card footers, readable colour-strip blocks and a shape-based selection mark. Contrast coverage now explicitly includes derived ER row fills and translucent Gantt section fills; the primary fill alone cannot establish their contrast.
 
 ### 19 Oct 2026 — Milestone 1 review
 

@@ -12,7 +12,7 @@ const SIZE: Record<BulletSize, string> = {
 
 type IndexBullet = { kind: "index"; value: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 };
 type StepBullet = { kind: "step"; value: 1 | 2 | 3 };
-type TokenBullet = { kind: "token"; glyph: TokenGlyph; color: string; label: string };
+type TokenBullet = { kind: "token"; glyph: TokenGlyph | null; color: string; label: string };
 
 export type BulletProps = (IndexBullet | StepBullet | TokenBullet) & {
   size?: BulletSize;

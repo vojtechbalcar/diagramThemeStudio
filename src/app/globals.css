@@ -339,3 +339,52 @@
     --lw-text: var(--lw-swap-ink);
   }
 }
+
+/* Editor v1 — design.md §3.1–3.7. */
+@layer components {
+  .editor-shell { display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+  .editor-shell > header { flex-shrink: 0; }
+  .editor-workspace { display: flex; flex: 1; min-height: 0; }
+  .editor-sidebar { display: none; flex: 0 0 320px; overflow-y: auto; border-right: 1px solid var(--lw-rule-color); }
+  .editor-canvas { flex: 1; min-width: 0; overflow-y: auto; container-type: inline-size; background: var(--lw-recess); }
+  .canvas-toolbar { display: flex; min-height: 64px; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px; padding: 8px 24px; border-bottom: 1px solid var(--lw-rule-color); background: var(--lw-page); }
+  .surface-segments { height: 48px; }
+  .surface-segments > label { padding-inline: 12px; font-size: 13px; }
+  .diagram-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; padding: 24px; align-items: stretch; }
+  .diagram-card { display: flex; flex-direction: column; min-width: 0; min-height: 360px; border: 2px solid var(--lw-ink); background: var(--lw-page); }
+  .diagram-card > .lw-band { flex-shrink: 0; }
+  .diagram-card > .lw-band h2 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .diagram-body { position: relative; display: flex; flex: 1; min-height: 256px; align-items: center; justify-content: center; padding: 24px; }
+  .diagram-svg { width: 100%; min-width: 0; }
+  .diagram-svg > svg { display: block; width: 100%; height: auto; max-width: 100%; max-height: 280px; margin-inline: auto; }
+  .empty-numeral { color: transparent; -webkit-text-stroke: 1px var(--lw-rule-color); }
+  .render-progress { position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: currentColor; transform-origin: left; animation: lw-render var(--lw-dur-slow) var(--lw-ease) both; }
+  .diagram-footer { display: flex; flex-wrap: wrap; min-height: 32px; align-items: center; justify-content: space-between; gap: 8px; padding: 4px 12px; border-top: 1px solid var(--lw-rule-color); background: var(--lw-page); }
+  .diagram-footer button { font-size: 11px; line-height: 16px; }
+  .colour-strip { z-index: 20; display: flex; flex-shrink: 0; height: 48px; overflow-x: auto; border-top: 1px solid var(--lw-rule-color); background: var(--lw-page); }
+  .colour-block { position: relative; display: flex; flex: 1 0 96px; min-width: 96px; align-items: flex-end; padding: 8px; cursor: pointer; }
+  .colour-block:focus-visible { outline-color: currentColor; outline-offset: -4px; }
+  .colour-block[aria-pressed="true"]::after { content: ""; position: absolute; top: 4px; right: 4px; width: 8px; height: 8px; border: 2px solid currentColor; }
+  .editor-select { display: block; height: 32px; max-width: 100%; border: 2px solid var(--lw-ink); padding-inline: 4px; border-radius: 0; background: var(--lw-page); color: var(--lw-ink); font: 500 13px/16px var(--lw-font-sans); }
+  .mapping-row { display: grid; grid-template-columns: 96px minmax(0, 1fr); align-items: center; column-gap: 8px; }
+  .auto-dot { width: 6px; height: 6px; flex-shrink: 0; border: 1px solid currentColor; border-radius: 50%; }
+  .editor-scrim { position: fixed; inset: 0; z-index: 50; background: rgba(11, 11, 11, 0.6); }
+  .editor-dialog { position: fixed; top: 50%; left: 50%; z-index: 51; width: min(640px, calc(100% - 32px)); max-height: calc(100dvh - 48px); overflow-y: auto; transform: translate(-50%, -50%); border: 2px solid var(--lw-ink); background: var(--lw-page); }
+  .editor-drawer { top: 0; left: 0; width: min(384px, calc(100% - 24px)); height: 100dvh; max-height: 100dvh; transform: none; }
+  .source-field { display: flex; height: 256px; overflow: hidden; border: 1px solid var(--lw-rule-color); background: var(--lw-recess); }
+  .source-lines { min-width: 32px; overflow: hidden; padding: 12px 8px; border-right: 1px solid var(--lw-rule-color); color: var(--lw-text-muted); text-align: right; font: 500 13px/16px var(--lw-font-mono); }
+  .source-field textarea { flex: 1; min-width: 0; height: 100%; resize: none; padding: 12px; color: var(--lw-ink); font: 500 13px/16px var(--lw-font-mono); white-space: pre; }
+  .source-field textarea:focus-visible { outline-offset: -4px; }
+  .import-formats > label { flex: 1; padding-inline: 8px; font-size: 13px; line-height: 16px; }
+  .editor-toast { position: fixed; z-index: 60; bottom: 64px; left: 24px; max-width: calc(100% - 48px); }
+}
+
+@keyframes lw-render { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@container (min-width: 640px) { .diagram-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1024px) { .editor-sidebar { display: block; } }
+@media (min-width: 1280px) { .editor-sidebar { flex-basis: 384px; } }
+@media (max-width: 767px) {
+  .diagram-grid { padding: 16px; gap: 16px; }
+  .canvas-toolbar { padding-inline: 16px; }
+  .editor-shell > header > div:first-of-type { min-width: 0; }
+}

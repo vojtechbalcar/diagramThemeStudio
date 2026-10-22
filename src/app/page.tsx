@@ -10,11 +10,12 @@ export default function Home() {
         <h1 className="type-title">Diagrams in your brand&rsquo;s colours.</h1>
         <p className="mt-2 max-w-[560px] text-muted">
           Linework turns design tokens into a Mermaid theme and checks the contrast of every pair. The
-          editor is being built; the graphics standards are ready.
+          editor is ready for your palette.
         </p>
-        <ButtonLink href="/system" arrow className="mt-8">
-          View the system
-        </ButtonLink>
+        <div className="mt-8 flex flex-wrap items-center gap-6">
+          <ButtonLink href="/editor" arrow>Open the editor</ButtonLink>
+          <ButtonLink href="/system" variant="text">View the system</ButtonLink>
+        </div>
       </main>
     </>
   );

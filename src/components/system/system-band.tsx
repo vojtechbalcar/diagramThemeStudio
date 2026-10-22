@@ -17,11 +17,11 @@ export function SystemBand({ subtitle, children }: SystemBandProps) {
       as="header"
       titleAs="div"
       title={
-        <span className="flex items-baseline gap-2">
+        <span className="flex min-w-0 items-baseline gap-2">
           <Link href="/" className="decoration-1 underline-offset-3 hover:underline">
             Linework
           </Link>
-          {subtitle ? <span className="type-body text-muted">{subtitle}</span> : null}
+          {subtitle ? <span className="min-w-0 truncate type-body text-muted">{subtitle}</span> : null}
         </span>
       }
     >

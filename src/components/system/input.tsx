@@ -1,7 +1,8 @@
-import type { InputHTMLAttributes } from "react";
+import type { InputHTMLAttributes, Ref } from "react";
 import { cn } from "@/lib/cn";
 
 export type InputProps = InputHTMLAttributes<HTMLInputElement> & {
+  ref?: Ref<HTMLInputElement>;
   /** 48px by default; 32px in dense tables. No other heights. */
   density?: "m" | "dense";
   /** Machine values (hex, paths) are set in mono. */
