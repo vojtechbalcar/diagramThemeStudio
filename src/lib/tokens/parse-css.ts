@@ -10,9 +10,8 @@
 
 import type { TokenType } from "@/lib/model";
 import { normaliseCssColour } from "./colour";
-import { looksLikeFontSize } from "./parse-dtcg";
-import { failed, parsed, type ParseResult, type ParseWarning, type TokenDraft } from "./result";
-import { isFontStack, normaliseDimensionString, normaliseFontFamily } from "./values";
+import { failed, gamutWarning, parsed, type ParseResult, type ParseWarning, type TokenDraft } from "./result";
+import { isFontStack, looksLikeFontSize, normaliseDimensionString, normaliseFontFamily } from "./values";
 
 type Declaration = { name: string; value: string };
 
@@ -194,7 +193,7 @@ const COLOUR_LIKE = /^(?:#[0-9a-f]+|(?:rgba?|hsla?|hwb|lab|lch|oklab|oklch|color
 function classify(
   name: string,
   value: string,
-): { type: TokenType; value: string; alpha?: number } | { problem: string } | null {
+): { type: TokenType; value: string; alpha?: number; mapped?: true } | { problem: string } | null {
   const lower = name.toLowerCase();
   const nameSaysFont = FONT_NAME.test(lower) && !NOT_FONT_FAMILY.test(lower);
   if (nameSaysFont && isFontStack(value, true)) {
@@ -202,7 +201,14 @@ function classify(
     if (family) return { type: "fontFamily", value: family };
   }
   const colour = normaliseCssColour(value);
-  if (colour) return { type: "color", value: colour.hex, ...(colour.alpha === undefined ? {} : { alpha: colour.alpha }) };
+  if (colour) {
+    return {
+      type: "color",
+      value: colour.hex,
+      ...(colour.alpha === undefined ? {} : { alpha: colour.alpha }),
+      ...(colour.mapped ? { mapped: true as const } : {}),
+    };
+  }
   if (COLOUR_LIKE.test(value)) {
     return { problem: `"${value}" isn't a colour Linework can read. Use hex, rgb() or oklch().` };
   }
@@ -243,6 +249,7 @@ export function parseCss(text: string): ParseResult {
   const resolver = new Resolver(first);
   const warnings: ParseWarning[] = [];
   const drafts: TokenDraft[] = [];
+  const mapped: Array<{ path: string; hex: string }> = [];
   let skipped = 0;
 
   for (const [name, raw] of first) {
@@ -257,7 +264,9 @@ export function parseCss(text: string): ParseResult {
     } else if ("problem" in token) {
       warnings.push({ path: name, message: token.problem });
     } else {
-      drafts.push({ path: name, ...token, source: "css" });
+      const { mapped: wasMapped, ...draft } = token;
+      if (wasMapped) mapped.push({ path: name, hex: draft.value });
+      drafts.push({ path: name, ...draft, source: "css" });
     }
   }
 
@@ -273,5 +282,5 @@ export function parseCss(text: string): ParseResult {
     });
   }
 
-  return parsed(drafts, warnings, skipped);
+  return parsed(drafts, [...warnings, ...gamutWarning(mapped)], skipped);
 }

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { TokenSchema } from "@/lib/model";
-import { looksLikeFontSize, parseDtcg, readDtcg } from "@/lib/tokens/parse-dtcg";
+import { parseDtcg, readDtcg } from "@/lib/tokens/parse-dtcg";
+import { looksLikeFontSize } from "@/lib/tokens/values";
 import { tokenId, type ParseResult } from "@/lib/tokens/result";
 
 function ok(result: ParseResult) {

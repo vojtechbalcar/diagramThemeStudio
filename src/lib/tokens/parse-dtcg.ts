@@ -22,8 +22,8 @@ import {
   type NormalisedColour,
 } from "./colour";
 import { parseJson } from "./json";
-import { failed, parsed, type ParseResult, type ParseWarning, type TokenDraft } from "./result";
-import { normaliseDimension, normaliseDimensionString, normaliseFontFamily } from "./values";
+import { failed, gamutWarning, parsed, type ParseResult, type ParseWarning, type TokenDraft } from "./result";
+import { looksLikeFontSize, normaliseDimension, normaliseDimensionString, normaliseFontFamily } from "./values";
 
 type JsonObject = { [key: string]: unknown };
 
@@ -62,16 +62,6 @@ function detectFormat(root: JsonObject): Format {
     stack.push(...Object.values(node));
   }
   return "legacy";
-}
-
-const FONT_SIZE_WORDS = /font|text|type|typo/;
-const NOT_FONT_SIZE_WORDS =
-  /spacing|space|gap|padding|margin|radius|border|width|height|shadow|blur|offset|inset|leading|line|letter|tracking|weight|stroke|icon|breakpoint|screen/;
-
-/** `font.size.body`, `--text-base`, `typography.caption.size` — but not `font.line-height`. */
-export function looksLikeFontSize(path: string): boolean {
-  const name = path.toLowerCase();
-  return FONT_SIZE_WORDS.test(name) && !NOT_FONT_SIZE_WORDS.test(name);
 }
 
 /** Figma writes variable scopes into $extensions; find them wherever they sit. */
@@ -307,6 +297,7 @@ class Reader {
 
   read(source: TokenSource): ParseResult {
     const drafts: TokenDraft[] = [];
+    const mapped: Array<{ path: string; hex: string }> = [];
     let skipped = 0;
 
     for (const token of this.tokens.values()) {
@@ -326,12 +317,7 @@ class Reader {
           this.warnings.push({ path: token.path, message: colour });
           continue;
         }
-        if (colour.mapped) {
-          this.warnings.push({
-            path: token.path,
-            message: `Outside sRGB, so Linework uses the nearest colour it can show, ${colour.hex}.`,
-          });
-        }
+        if (colour.mapped) mapped.push({ path: token.path, hex: colour.hex });
         drafts.push({
           path: token.path,
           type,
@@ -359,7 +345,7 @@ class Reader {
         drafts.push({ path: token.path, type, value: dimension, source });
       }
     }
-    return parsed(drafts, this.warnings, skipped);
+    return parsed(drafts, [...this.warnings, ...gamutWarning(mapped)], skipped);
   }
 }
 

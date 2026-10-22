@@ -16,9 +16,9 @@
 import { z } from "zod";
 import { normaliseDtcgColour } from "./colour";
 import { parseJson } from "./json";
-import { looksLikeFontSize, readDtcg } from "./parse-dtcg";
+import { readDtcg } from "./parse-dtcg";
 import { failed, parsed, type ParseResult, type ParseWarning, type TokenDraft } from "./result";
-import { normaliseDimension, normaliseFontFamily } from "./values";
+import { looksLikeFontSize, normaliseDimension, normaliseFontFamily } from "./values";
 
 const AliasSchema = z.object({ type: z.literal("VARIABLE_ALIAS"), id: z.string() });
 const RgbaSchema = z.object({ r: z.number(), g: z.number(), b: z.number(), a: z.number().optional() });

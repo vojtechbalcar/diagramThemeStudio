@@ -23,6 +23,21 @@ function formatNumber(n: number): string {
   return String(Math.round(n * 10000) / 10000);
 }
 
+const FONT_SIZE_WORDS = /font|text|type|typo/;
+const NOT_FONT_SIZE_WORDS =
+  /spacing|space|gap|padding|margin|radius|border|width|height|shadow|blur|offset|inset|leading|line|letter|tracking|weight|stroke|icon|breakpoint|screen/;
+
+/**
+ * Whether a dimension token is a font size, judged by its name:
+ * `font.size.body`, `--text-base`, `typography.caption.size`, but not
+ * `font.line-height` or `spacing.4`. Linework only uses dimensions as
+ * font sizes, so the rest are skipped on import.
+ */
+export function looksLikeFontSize(path: string): boolean {
+  const name = path.toLowerCase();
+  return FONT_SIZE_WORDS.test(name) && !NOT_FONT_SIZE_WORDS.test(name);
+}
+
 /** A px or rem dimension as "16px" / "1.5rem". Anything else (em, %, negative) is null. */
 export function normaliseDimension(value: number, unit: string): string | null {
   if (!Number.isFinite(value) || value < 0) return null;

@@ -52,6 +52,25 @@ export function parsed(drafts: readonly TokenDraft[], warnings: ParseWarning[], 
   return { ok: true, tokens: withIds(drafts), warnings, skipped };
 }
 
+/**
+ * One warning for every colour moved into sRGB. A Tailwind v4 theme has
+ * dozens of wide-gamut OKLCH colours; one line says it better than forty.
+ */
+export function gamutWarning(mapped: ReadonlyArray<{ path: string; hex: string }>): ParseWarning[] {
+  if (mapped.length === 0) return [];
+  const [first] = mapped;
+  if (mapped.length === 1) {
+    return [{ path: first.path, message: `Outside sRGB, so Linework uses the nearest colour it can show, ${first.hex}.` }];
+  }
+  const others = mapped.length - 1;
+  return [
+    {
+      path: first.path,
+      message: `This and ${others} other ${others === 1 ? "colour are" : "colours are"} outside sRGB, so Linework uses the nearest colours it can show.`,
+    },
+  ];
+}
+
 export function failed(message: string, line?: number): ParseResult {
   return { ok: false, error: line === undefined ? { message } : { message, line } };
 }
