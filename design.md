@@ -258,7 +258,7 @@ Messages read like a sign: what is happening, then what to do.
 - **Canvas:** toolbar + 2×2 grid of sign panels; grid becomes 1 column below 1024px of canvas width. Cards are equal height (min 360px).
 - **Colour strip:** fixed bottom, 48px.
 
-Editor v1 exposes Import and the mode toggle in the system band, with the set name edited in the token panel. Share link and Export join the band in milestone 4.
+The editor exposes Import, Share link, Export and the mode toggle in the system band, with the set name edited in the token panel. Below 768px, Import moves into the Tokens drawer and sharing is available in Export's Share link tab; the Export trigger becomes its named 48px arrow tile so the band still fits a 320px screen.
 
 ### 3.2 Token panel
 **Token row** (height `M`):
@@ -303,6 +303,9 @@ Blocks have a 96px minimum width to keep six-digit hex values readable; the stri
 
 ### 3.7 Dialogs, drawers, menus
 - **Export drawer:** slides from the right, 2px ink left frame, band header "Export", body is a title block (§3.8) followed by output tabs: "Init directive", "mermaid.initialize()", "JSON", "Share link". Each tab: mono code block with a Copy button (arrow-free text button + Copy symbol) at top right.
+- The export drawer is at most 640px wide and fills the viewport height, with a sticky band header. Its four tabs form a joined two-column group so the full `mermaid.initialize()` label stays readable on phones. The code block is a read-only, selectable mono field with horizontal scrolling and a 320px starting height.
+- JSON contains the complete Mermaid configuration object. All config formats use the selected preview surface when compositing alpha, preserve unmapped roles as derived and match the preview's strict/base/classic/text-label settings. The init directive remains available for existing integrations; its helper text points new integrations to Mermaid's configuration API.
+- Copy feedback appears within the active export panel as well as in the toast, so it stays available to screen readers inside the modal. A failed clipboard write leaves the selectable output available for manual copying.
 - **Dialog:** centred, max 640px, 2px ink frame, band header with title and close (Close symbol in a 24px icon button, §3.9), page behind gets a `rgba(11,11,11,0.6)` scrim in both modes.
 - **Menu/select:** 2px ink frame, rows `M/2`… `M` high, selected row inverted. No shadows.
 
@@ -317,6 +320,13 @@ Borrowed from technical drawings and the manual's specimen pages. A ruled table 
 | Date | 19 Oct 2026 |
 
 1px rules between cells, labels in `small` `--lw-grey-500`, values in `body`/`mono`. If any contrast fail exists, the Contrast row value is `--lw-signal` and the drawer shows a line: "Export is allowed, but 1 pair fails contrast."
+
+The title block shows "Checking contrast…" while a newer theme is rendering and "Unavailable" after a render error; it never presents stale results as current. Large-text-only results have a separate count. Export is allowed in all three cases. The date is the current local date.
+
+### 3.8.1 Shared state
+Share links contain the complete version-1 token set: name, tokens (including alpha and source), mappings (including auto-map confirmation), and preview surface. The public format is `/editor#lw=1.<base64url-deflate>`. The fragment is decoded and validated locally; it needs no backend. The current editor URL follows committed edits after a 200ms debounce without adding browser-history entries. Back/forward and hash navigation restore validated sets; malformed links preserve the current set and show a toast.
+
+The encoded fragment is limited to 64,000 characters and decompressed input to 1,000,000 bytes. Oversized sets stay editable; sharing reports that the set needs fewer tokens. Share URLs use the current origin and omit unrelated query parameters. Interface mode and transient UI state (open panels, selected token, contrast visibility) are not shared.
 
 ### 3.9 Buttons and controls
 | Control | Spec |
@@ -551,6 +561,10 @@ Before a UI change is done, check:
 
 ## Appendix B — Changelog
 Every change to this manual, newest first. Say what changed and why, so later readers can tell a decision from an accident.
+
+### 22 Oct 2026 — Milestone 4 export and share
+
+Specified the right-side export drawer, responsive two-column output tabs, selectable code fields, current contrast status, clipboard feedback and phone header actions. Defined equivalent config outputs and the compressed/versioned URL format, bounds and local restore/synchronization behavior.
 
 ### 22 Oct 2026 — Milestone 3 editor
 
