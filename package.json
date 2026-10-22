@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "culori": "^4.0.2",
+    "mermaid": "^12.2.0",
     "next": "16.4.2",
     "radix-ui": "^1.8.1",
     "react": "19.3.0",
