@@ -16,7 +16,7 @@ pnpm lint      # design-system lint, ESLint and TypeScript
 pnpm test:e2e  # Chromium integration tests against the production build
 ```
 
-Milestones 1–5 are implemented. Export an init directive, `mermaid.initialize()` call, Mermaid configuration JSON or a share link from the editor. Compressed URL fragments preserve the complete token set, mappings, name and preview surface across sharing and reloads; no data is uploaded to a backend.
+Milestones 1–5 are implemented. Export an init directive, `mermaid.initialize()` call, Mermaid configuration JSON or a share link from the editor. Compressed URL fragments preserve the complete token set, mappings, name and preview surface across sharing and reloads. Sharing uploads no theme data; the optional Save action stores a private copy in Postgres.
 
 Click a diagram to edit its Mermaid source in focus mode, inspect contrast leaders and reset it independently. Source edits stay in the current session; share links contain the theme. Phones use separate Tokens, Canvas and Export views, while tablets retain the Tokens drawer.
 
@@ -33,6 +33,8 @@ The anonymous editor and fragment sharing work without services. To enable priva
 
 See the [Clerk Next.js setup](https://clerk.com/docs/nextjs/getting-started/quickstart) and [Drizzle Postgres guide](https://orm.drizzle.team/docs/get-started-postgresql) for service configuration. Never commit `.env.local` or paste secrets into an issue or chat.
 
-`TEST_DATABASE_URL` optionally enables real Postgres tests: `TEST_DATABASE_URL=<private-test-connection> pnpm test`. Use a disposable test database: the suite applies migrations and removes its own test rows. It skips these tests when the variable is absent. GitHub Actions runs them against an isolated Postgres service; no Clerk secrets are needed. Browser tests mock account/API responses to exercise UI states and do not prove a live Clerk session. Verify real sign-in and cross-device persistence after configuring your services.
+`TEST_DATABASE_URL` optionally enables real Postgres tests. Export it privately before `pnpm test`, or put it in `.env.local` and run `node --env-file=.env.local node_modules/vitest/vitest.mjs run src/test/saved-sets-db.test.ts`. Use a disposable test database: the suite applies migrations and removes its own test rows. It skips these tests when the variable is absent.
 
-Read [CLAUDE.md](CLAUDE.md) for architecture and [design.md](design.md) for the binding visual specification. The [M3 plan](docs/superpowers/plans/2026-10-22-m3-editor.md), [M4 plan](docs/superpowers/plans/2026-10-22-m4-export-share.md) and [M5 plan](docs/superpowers/plans/2026-10-22-m5-polish.md) record implementation and verification.
+[docs/ci/verify.yml](docs/ci/verify.yml) is a GitHub Actions template with an isolated Postgres service; copy it into `.github/workflows/verify.yml` using a GitHub login with workflow permission to enable CI. No Clerk secrets are needed for that workflow. Browser tests mock account/API responses to exercise UI states and do not prove a live Clerk session. Verify real sign-in and cross-device persistence after configuring your services.
+
+Read [CLAUDE.md](CLAUDE.md) for architecture and [design.md](design.md) for the binding visual specification. The [M3 plan](docs/superpowers/plans/2026-10-22-m3-editor.md), [M4 plan](docs/superpowers/plans/2026-10-22-m4-export-share.md), [M5 plan](docs/superpowers/plans/2026-10-22-m5-polish.md) and [M6A plan](docs/superpowers/plans/2026-10-22-m6-accounts-saved-sets.md) record implementation and verification.

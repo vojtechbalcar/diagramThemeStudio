@@ -3,12 +3,15 @@
 import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import { createEditorSet, editorReducer, type EditorAction } from "@/lib/state/editor";
 import { decodeState, encodeState } from "@/lib/state/url";
+import { getSavedSet, rememberSavedSet, SavedSetRequestError } from "@/lib/saved-sets/client";
+import { SavedSetIdSchema } from "@/lib/saved-sets/model";
 
 /** Browser URL lifecycle is kept outside the serialisable domain reducer. */
 export function useEditorState(notify: (message: string) => void, onRestore: () => void) {
   const [set, reduce] = useReducer(editorReducer, undefined, () => createEditorSet());
   const [ready, setReady] = useState(false);
   const revision = useRef(0);
+  const navigation = useRef(0);
   const dirty = useRef(false);
   const dispatch = useCallback((action: EditorAction) => {
     // Invalidate pending decodes and encodes immediately, before React commits.
@@ -20,18 +23,38 @@ export function useEditorState(notify: (message: string) => void, onRestore: () 
   useEffect(() => {
     let cancelled = false;
     async function restore() {
+      navigation.current++;
       const ticket = ++revision.current;
       const fragment = window.location.hash;
+      const search = window.location.search;
       dirty.current = false;
-      const decoded = await decodeState(fragment);
-      if (cancelled) return;
-      if (ticket === revision.current && fragment === window.location.hash) {
-        if (decoded.ok) {
+      const current = () => !cancelled && ticket === revision.current && fragment === window.location.hash && search === window.location.search;
+      try {
+        const decoded = await decodeState(fragment);
+        if (!current()) return;
+        const id = new URLSearchParams(search).get("set");
+        if (decoded.ok && decoded.set) {
           onRestore();
-          reduce({ type: "replace", set: decoded.set ?? createEditorSet() });
-        } else notify(decoded.error);
-      }
-      setReady(true);
+          reduce({ type: "replace", set: decoded.set });
+        } else if (id !== null) {
+          const parsed = SavedSetIdSchema.safeParse(id);
+          if (!parsed.success) throw new Error("This saved-set link is invalid. Open a theme from Saved sets.");
+          const saved = await getSavedSet(parsed.data);
+          if (current()) {
+            rememberSavedSet(saved.id, saved.revision);
+            onRestore();
+            dirty.current = true;
+            reduce({ type: "replace", set: saved.set });
+          }
+        } else {
+          if (current() && decoded.ok) {
+            onRestore();
+            reduce({ type: "replace", set: createEditorSet() });
+          } else if (current() && !decoded.ok) notify(decoded.error);
+        }
+      } catch (error) {
+        if (current()) notify(error instanceof SavedSetRequestError && error.status === 401 ? "Sign in from Saved sets, then reopen this theme." : error instanceof Error ? error.message : "This saved set could not be opened. Try again from Saved sets.");
+      } finally { if (!cancelled) setReady(true); }
     }
     void restore();
     window.addEventListener("hashchange", restore);
@@ -64,5 +87,5 @@ export function useEditorState(notify: (message: string) => void, onRestore: () 
     return () => { cancelled = true; clearTimeout(timer); };
   }, [set, ready, notify]);
 
-  return [set, dispatch] as const;
+  return [set, dispatch, navigation] as const;
 }

@@ -30,7 +30,7 @@ jobs:
       - run: pnpm test
         env:
           TEST_DATABASE_URL: postgres://linework_test:linework_test@localhost:5432/linework_test
-      - run: pnpm build
-      - run: pnpm lint
       - run: pnpm exec playwright install --with-deps chromium
-      - run: pnpm test:e2e
+      # Playwright's web server builds production before starting the suite.
+      - run: pnpm test:e2e --workers=1
+      - run: pnpm lint

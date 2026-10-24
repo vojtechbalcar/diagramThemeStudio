@@ -7,6 +7,10 @@ test("landing shows four live themed panels, steps and the current palette", asy
   await page.goto("/");
   await expect(page.getByRole("heading", { name: "Diagrams in your brand’s colours." })).toBeVisible();
   const demo = page.getByRole("region", { name: "Live theme previews" });
+  // Hold a deliberate preset while checking the initial proof; the carousel may
+  // advance while Mermaid loads on a busy machine.
+  await demo.getByRole("button", { name: "Pause preview", exact: true }).click();
+  await demo.getByRole("button", { name: "Signal", exact: true }).click();
   await expect(demo.locator('.diagram-picture-current svg')).toHaveCount(4);
   for (const name of ["Flowchart", "Sequence", "Entity relationship", "Gantt"]) await expect(demo.getByRole("img", { name: new RegExp(`${name} preview`) })).toBeVisible();
   await expect(page.getByRole("list", { name: "How it works" }).getByRole("listitem")).toHaveCount(3);
@@ -25,8 +29,11 @@ test("landing cycle pauses on hover, focus and explicit Pause", async ({ page })
   await page.clock.install();
   await page.goto("/");
   const demo = page.getByRole("region", { name: "Live theme previews" });
+  await demo.getByRole("button", { name: "Pause preview", exact: true }).click();
   await expect(demo.locator('.diagram-picture-current svg')).toHaveCount(4);
   await page.clock.pauseAt(new Date(await page.evaluate(() => Date.now()) + 100));
+  await demo.getByRole("button", { name: "Resume preview", exact: true }).click();
+  await page.getByRole("heading", { level: 1 }).click();
   const first = await demo.getAttribute("data-preset");
   await page.clock.fastForward(3100);
   await expect(demo).not.toHaveAttribute("data-preset", first!);

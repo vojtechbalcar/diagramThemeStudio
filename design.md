@@ -366,6 +366,16 @@ No testimonials, no logos wall, no pricing.
 
 ---
 
+### 3.13 Accounts and private saved sets
+
+Accounts are optional. Without service configuration the editor and public fragment sharing remain usable; `/sets` explains that accounts are unavailable and links back to the editor. When accounts are available the app band includes **Saved sets** (**Sets** on phones). The library provides sign-in and sign-out controls. Account forms use the existing type, ink and focus tokens, square corners and ruled fields; no shadows or gradients.
+
+The library is a single column of ruled rows, with a name, token count, last-saved date, up to four token-colour bullets, **Open** and **Delete**. It loads private metadata in pages and offers **Load more**. Loading, empty, unavailable and retry states use explicit text. Changing accounts clears the previous library. Deleting requires confirmation and a matching revision; a conflict refreshes the list before another attempt. Names and actions wrap at 320px; the library headline uses `title` on phones and `display` from tablet width.
+
+The editor offers **Save** in the desktop band and in phone Tokens/Export views. All triggers share one dialog and pending request. The dialog names the private theme and offers **Save a copy** when a saved identity exists. Updates use the opened revision. A stale update preserves the draft and offers a copy or reopening the latest saved version. Finishing a request never replaces newer edits or attaches an identity after navigation to a different draft. Share links contain a separate public snapshot without private saved IDs.
+
+Opening `/editor?set=<id>` loads the private theme and remembers its revision. A validated fragment takes precedence as the local draft; an invalid fragment may fall back to the saved theme. Slow restores cannot overwrite newer edits or navigation. The draft's revision survives reload so another tab's newer save produces a conflict.
+
 ## Section 4 — Motion
 
 Transit motion is the train, not the sign. Signs don't move. Motion in Linework is brief and only explains a change.
@@ -569,6 +579,10 @@ Before a UI change is done, check:
 
 ## Appendix B — Changelog
 Every change to this manual, newest first. Say what changed and why, so later readers can tell a decision from an accident.
+
+### 24 Oct 2026 — Accounts and private saved sets
+
+Specified conditional account access, private library rows and recovery states, shared save controls, revision conflicts, fragment precedence and navigation-safe asynchronous results. Service configuration remains optional.
 
 ### 22 Oct 2026 — Milestone 5 focus, motion and landing
 

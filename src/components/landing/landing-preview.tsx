@@ -50,7 +50,7 @@ export function LandingPreview() {
           <h1 id="landing-title" className="type-title">Diagrams in your brand&rsquo;s colours.</h1>
           <p className="mt-4">Turn design tokens into a Mermaid theme. See every diagram, check the contrast and export a configuration that fits your brand.</p>
           <div className="mt-8"><ButtonLink href="/editor" arrow>Open the editor</ButtonLink></div>
-          <p className="mt-4 type-small text-muted">No account. No uploads. Your theme stays in your browser.</p>
+          <p className="mt-4 type-small text-muted">Start without an account. Import, preview and share in your browser.</p>
           <div className="mt-8"><ButtonLink href="/system" variant="text">View the system</ButtonLink></div>
         </section>
         <section className="landing-demo" aria-label="Live theme previews" data-preset={preset.id}
