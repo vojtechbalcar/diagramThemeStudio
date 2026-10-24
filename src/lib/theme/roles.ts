@@ -73,7 +73,8 @@ export type ThemeVariable =
   | "titleColor"
   | "rowOdd"
   | "rowEven"
-  | "sectionBkgColor";
+  | "sectionBkgColor"
+  | "stateLabelColor" | "stateBkg" | "transitionLabelColor" | "labelBackgroundColor" | "transitionColor";
 
 export type ContrastPair = {
   id: string;
@@ -95,6 +96,9 @@ export type ContrastPair = {
 };
 
 export const CONTRAST_PAIRS: readonly ContrastPair[] = [
+  { id: "state-text", name: "State text on state fill", short: "State text", kind: "text", foreground: "stateLabelColor", background: "stateBkg", roles: ["primaryTextColor", "primaryColor"], diagrams: ["state"] },
+  { id: "state-transition", name: "Transition text on label fill", short: "Transition text", kind: "text", foreground: "transitionLabelColor", background: "labelBackgroundColor", backgroundOpacity: 0.5, roles: ["primaryTextColor", "primaryColor", "background"], diagrams: ["state"] },
+  { id: "state-line", name: "Transition line on background", short: "Transition line", kind: "non-text", foreground: "transitionColor", background: "surface", roles: ["lineColor", "background"], diagrams: ["state"] },
   {
     id: "primary-text",
     name: "Primary text on primary fill",
@@ -134,7 +138,7 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
     foreground: "noteTextColor",
     background: "noteBkgColor",
     roles: ["noteTextColor", "noteBkgColor"],
-    diagrams: ["sequence"],
+    diagrams: ["sequence", "state"],
   },
   {
     id: "text-on-background",

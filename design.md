@@ -298,6 +298,7 @@ The proofing marks — the feature that makes Linework a designer's tool.
 - Focus leaders anchor representative elements actually present in the SVG. Missing features have no leader; the complete theme-pair list remains below the proof. The annotation rail uses 176px tiles; on phones the proof scrolls horizontally within its pane. Leaders and tiles use preview-surface ink, independent of interface mode. Repeated SVG views receive separate IDs for CSS/markers.
 - Thresholds: WCAG 2.x — 4.5:1 normal text (AA), 3:1 large text and non-text elements such as lines against background, 7:1 shown as AAA.
 - Checks use Mermaid's resolved theme variables. Entity attributes include both alternating row fills; Gantt includes its section title and outside task text against the section fill composited at Mermaid's 20% opacity. These are separate pairs because derived fills can fail when the primary fill passes.
+- State diagrams use their resolved state, note and transition colours. Transition-label backgrounds are composited at Mermaid's 50% opacity over the current surface; node and transition text have separate checks and SVG leaders.
 
 ### 3.6 Colour strip
 Fixed bar along the bottom: every colour token as a 48px-high block, width proportional (equal widths). Below each block, inside it, the hex in `mono-small`, colour auto black/white. Clicking a block selects that token in the panel. It is the "line map" of the palette — the Dribbble shot lives here.
@@ -345,7 +346,7 @@ The encoded fragment is limited to 64,000 characters and decompressed input to 1
 | Disabled | 40% opacity is **not** used. Disabled = `--lw-rule-color` frame, `--lw-page` fill, `--lw-text-muted` text and glyphs, `cursor: not-allowed`. |
 
 ### 3.10 Empty, loading and error states
-- **Empty canvas:** the four sign panels are still drawn, bands and bullets intact, bodies showing a large outline numeral (`display`, `--lw-grey-200`) and one line of guidance. The structure of the system is visible before there is content.
+- **Empty canvas:** all registered sign panels are still drawn, bands and bullets intact, bodies showing a large outline numeral (`display`, `--lw-grey-200`) and one line of guidance. The structure of the system is visible before there is content.
 - **Loading (Mermaid render):** the card body shows a 2px ink bar that grows left→right across the card footer rule. No spinners, no skeleton shimmer.
 - **Render error:** card body shows the Warning symbol, the Mermaid error message in `mono-small`, and "Reset this diagram" text button. The band summary shows the Fail symbol.
 - **Offline / failed share link:** a toast (§3.11).

@@ -1,3 +1,4 @@
+import { DIAGRAMS } from "../src/lib/theme/diagrams";
 import { expect, test } from "@playwright/test";
 
 for (const mode of ["light", "dark"] as const) {
@@ -44,10 +45,10 @@ test("tablet retains the Tokens drawer and desktop retains its sidebar", async (
 test("new renders crossfade in reading order and reduced motion removes timing", async ({ page }) => {
   await page.goto("/editor");
   await page.getByRole("button", { name: "Use Signal preset" }).click();
-  await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+  await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
   await page.getByText("Start from a preset", { exact: true }).click();
   await page.getByRole("button", { name: "Use Forest preset" }).click();
-  await expect(page.locator('.diagram-picture-current')).toHaveCount(4);
+  await expect(page.locator('.diagram-picture-current')).toHaveCount(DIAGRAMS.length);
   const timings = await page.locator('.diagram-picture-current').evaluateAll((pictures) => pictures.map((picture) => {
     const style = getComputedStyle(picture);
     return [style.animationDuration, style.animationDelay];

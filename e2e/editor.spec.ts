@@ -1,3 +1,4 @@
+import { DIAGRAMS } from "../src/lib/theme/diagrams";
 import { expect, test } from "@playwright/test";
 import { contrastRatio, formatRatio } from "../src/lib/contrast/wcag";
 import { composite, normaliseCssColour } from "../src/lib/tokens/colour";
@@ -15,7 +16,7 @@ test("import, map and edit a theme across all four live previews", async ({ page
   await dialog.getByRole("textbox", { name: "Token source" }).fill(":root { --primary: #FFE14D; --text: #141414; --background: #FFFFFF; --line: #141414; --font-family: Inter; --font-size: 14px; }");
   await expect(dialog.getByRole("status")).toContainText("4 colours, 1 font, 1 size found");
   await dialog.getByRole("button", { name: "Use tokens" }).click();
-  await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+  await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
   await expect(page.locator(".diagram-body[aria-busy='true']")).toHaveCount(0);
   await expect(page.getByRole("region", { name: "Flowchart contrast" })).toContainText("Primary text on primary fill");
   await page.getByRole("combobox", { name: "Primary fill", exact: true }).selectOption({ label: "--primary" });
@@ -23,7 +24,7 @@ test("import, map and edit a theme across all four live previews", async ({ page
   const value = page.getByRole("textbox", { name: "Value for --primary", exact: true });
   await value.fill("invalid");
   await expect(value).toHaveAttribute("aria-invalid", "true");
-  await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+  await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
   await value.fill("#123456");
   await value.blur();
   await expect(value).toHaveValue("#123456");
@@ -45,7 +46,7 @@ test("import, map and edit a theme across all four live previews", async ({ page
 test("presets, colour strip selection, manual tokens and keyboard dialogs", async ({ page }) => {
   await page.goto("/editor");
   await page.getByRole("button", { name: "Use Forest preset" }).click();
-  await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+  await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
   await page.getByRole("button", { name: "Select color.moss", exact: true }).click();
   await expect(page.getByRole("textbox", { name: "Value for color.moss" })).toBeFocused();
   await page.getByRole("combobox", { name: "Primary fill", exact: true }).selectOption("");
@@ -72,7 +73,7 @@ test("the editor fits a phone and keeps token controls accessible", async ({ pag
   await expect(panel).toBeVisible();
   await panel.getByRole("button", { name: "Use Night preset" }).click();
   await views.getByText("Canvas", { exact: true }).click();
-  await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+  await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
 
@@ -95,7 +96,7 @@ test("contrast annotations match the SVG attribute rows and translucent Gantt se
     const presets = page.locator("details");
     if (!await presets.evaluate((element) => element instanceof HTMLDetailsElement && element.open)) await page.getByText("Start from a preset", { exact: true }).click();
     await page.getByRole("button", { name: `Use ${name} preset` }).click();
-    await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+    await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
     await expect(page.locator(".diagram-body[aria-busy='true']")).toHaveCount(0);
     const colours = await page.evaluate(() => {
       function fill(selector: string) {
@@ -132,7 +133,7 @@ for (const mode of ["light", "dark"] as const) {
     await page.emulateMedia({ colorScheme: mode, reducedMotion: "reduce" });
     await page.goto("/editor");
     await page.getByRole("button", { name: "Use Night preset" }).click();
-    await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+    await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
     for (const [label, colour] of [["Paper", "rgb(255, 255, 255)"], ["Ink", "rgb(11, 11, 11)"], ["Brand", "rgb(15, 20, 32)"]]) {
       await page.getByText(label, { exact: true }).click();
       await expect(page.locator(".diagram-body").first()).toHaveCSS("background-color", colour);

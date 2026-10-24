@@ -1,3 +1,4 @@
+import { DIAGRAMS } from "../src/lib/theme/diagrams";
 import { expect, test } from "@playwright/test";
 import { decodeState, encodeState } from "../src/lib/state/url";
 import { PRESETS } from "../src/lib/tokens/presets";
@@ -10,7 +11,7 @@ test("exports each config format and copies the visible output", async ({ page, 
   await page.goto("/editor");
   await expect(page.getByRole("button", { name: "Export", exact: true })).toBeDisabled();
   await page.getByRole("button", { name: "Use Signal preset" }).click();
-  await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+  await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
   await page.getByRole("button", { name: "Export", exact: true }).click();
   const drawer = page.getByRole("dialog", { name: "Export", exact: true });
   await expect(drawer.getByRole("table", { name: "Theme details" })).toContainText("Signal");

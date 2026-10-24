@@ -7,7 +7,7 @@ import { Bullet } from "@/components/system/bullet";
 import { useMediaQuery } from "@/components/system/use-media-query";
 import { usePreview } from "@/components/editor/use-preview";
 import { PRESETS } from "@/lib/tokens/presets";
-import { DIAGRAMS } from "@/lib/theme/diagrams";
+import { LANDING_DIAGRAMS, LANDING_DIAGRAM_KINDS } from "@/lib/theme/diagrams";
 import { checksFor } from "@/lib/contrast/check";
 import { higherContrast } from "@/lib/contrast/wcag";
 import { INK, PAPER } from "@/lib/theme/build-theme";
@@ -40,7 +40,7 @@ export function LandingPreview() {
     return () => clearInterval(timer);
   }, [stopped]);
   const preset = PRESETS[index];
-  const preview = usePreview(preset.set);
+  const preview = usePreview(preset.set, undefined, LANDING_DIAGRAM_KINDS);
   const ink = higherContrast(preview.surface, INK, PAPER);
   const style = { backgroundColor: preview.surface, "--lw-ink": ink, "--lw-on-ink": ink === INK ? PAPER : INK, "--lw-focus": ink, color: ink } as CSSProperties;
   return <div className="landing-page">
@@ -59,7 +59,7 @@ export function LandingPreview() {
           <div className="landing-demo-toolbar"><h2 className="type-heading">One theme. Four diagrams.</h2><Button variant="text" disabled={reduced} aria-pressed={paused} onClick={() => setPaused((current) => !current)}>{paused ? "Resume preview" : "Pause preview"}</Button></div>
           <div className="landing-presets" role="group" aria-label="Preview preset">{PRESETS.map((option, position) => <button type="button" key={option.id} aria-pressed={index === position} className="landing-preset" onClick={() => setIndex(position)}>{option.set.name}</button>)}</div>
           <p className="mt-3 type-small text-muted">{reduced ? "Automatic cycling is off for reduced motion." : stopped ? "Preview paused. Choose a preset to compare." : "Changes preset every 3 seconds. Hover or focus to pause."}</p>
-          <div className="landing-diagrams">{DIAGRAMS.map((diagram) => <LandingPanel key={diagram.kind} diagram={diagram} result={preview.result?.diagrams[diagram.kind]} checks={checksFor(diagram.kind, preview.checks)} pending={preview.pending} error={preview.error} setName={preset.set.name} style={style} onRetry={preview.retry} />)}</div>
+          <div className="landing-diagrams">{LANDING_DIAGRAMS.map((diagram) => <LandingPanel key={diagram.kind} diagram={diagram} result={preview.result?.diagrams[diagram.kind]} checks={checksFor(diagram.kind, preview.checks)} pending={preview.pending} error={preview.error} setName={preset.set.name} style={style} onRetry={preview.retry} />)}</div>
         </section>
       </div>
       <ol className="landing-steps" aria-label="How it works">{STEPS.map((step) => <li key={step.number}>

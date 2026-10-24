@@ -1,10 +1,10 @@
 import { mermaidConfig, type MermaidConfig, type ThemeVariables } from "@/lib/theme/build-theme";
-import { DIAGRAMS, type DiagramKind } from "@/lib/theme/diagrams";
+import { ALL_DIAGRAM_KINDS, type DiagramKind } from "@/lib/theme/diagrams";
 import { SAMPLES } from "./samples";
 import { validateSource } from "./source";
 
 export type DiagramResult = { ok: true; svg: string } | { ok: false; error: string };
-export type BatchResult = { diagrams: Record<DiagramKind, DiagramResult>; variables: Record<string, string> };
+export type BatchResult = { diagrams: Partial<Record<DiagramKind, DiagramResult>>; variables: Record<string, string> };
 
 /** Small boundary lets queue behaviour be tested without pretending to render SVG in Node. */
 export type MermaidEngine = {
@@ -22,6 +22,7 @@ export function createBatchRenderer(engine: MermaidEngine) {
     variables: ThemeVariables,
     sources: Readonly<Record<DiagramKind, string>> = SAMPLES,
     signal?: AbortSignal,
+    kinds: readonly DiagramKind[] = ALL_DIAGRAM_KINDS,
   ): Promise<BatchResult | null> {
     const run = async (): Promise<BatchResult | null> => {
       if (signal?.aborted) return null;
@@ -34,20 +35,19 @@ export function createBatchRenderer(engine: MermaidEngine) {
         }
       }
       const entries: Array<[DiagramKind, DiagramResult]> = [];
-      for (const diagram of DIAGRAMS) {
+      for (const kind of kinds) {
         if (signal?.aborted) return null;
         try {
-          const problem = validateSource(diagram.kind, sources[diagram.kind]);
+          const problem = validateSource(kind, sources[kind]);
           if (problem) throw new Error(problem);
-          const { svg } = await engine.render(`lw-${session}-${++nextId}`, sources[diagram.kind]);
-          entries.push([diagram.kind, { ok: true, svg }]);
+          const { svg } = await engine.render(`lw-${session}-${++nextId}`, sources[kind]);
+          entries.push([kind, { ok: true, svg }]);
         } catch (error) {
-          entries.push([diagram.kind, { ok: false, error: error instanceof Error ? error.message : "This diagram could not be rendered. Reset it to try again." }]);
+          entries.push([kind, { ok: false, error: error instanceof Error ? error.message : "This diagram could not be rendered. Reset it to try again." }]);
         }
       }
       if (signal?.aborted) return null;
-      // Entries are built from every member of the fixed diagram registry.
-      const diagrams = Object.fromEntries(entries) as Record<DiagramKind, DiagramResult>;
+      const diagrams: Partial<Record<DiagramKind, DiagramResult>> = Object.fromEntries(entries);
       return { diagrams, variables: colours };
     };
     const result = queue.then(run, run);

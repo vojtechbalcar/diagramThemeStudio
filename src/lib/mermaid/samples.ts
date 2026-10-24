@@ -35,4 +35,10 @@ export const SAMPLES: Readonly<Record<DiagramKind, string>> = {
     Map roles :b, after a, 2d
     Check contrast :c, after b, 2d
     Export :d, after c, 1d`,
+  state: `stateDiagram-v2
+    [*] --> Draft
+    Draft --> Review: Map roles
+    Review --> Ready: Check contrast
+    Ready --> [*]
+    note right of Review: Refine the palette`,
 };

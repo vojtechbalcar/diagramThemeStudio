@@ -1,16 +1,26 @@
 import type { DiagramKind } from "@/lib/theme/diagrams";
 
-const HEADERS: Record<DiagramKind, RegExp> = { flowchart: /^(?:flowchart|graph)\b/, sequence: /^sequenceDiagram\b/, er: /^erDiagram\b/, gantt: /^gantt\b/ };
-const NAMES: Record<DiagramKind, string> = { flowchart: "flowchart", sequence: "sequenceDiagram", er: "erDiagram", gantt: "gantt" };
+const HEADERS: Record<DiagramKind, RegExp> = { flowchart: /^(?:flowchart|graph)\b/, sequence: /^sequenceDiagram\b/, er: /^erDiagram\b/, gantt: /^gantt\b/, state: /^stateDiagram-v2\b/ };
+const NAMES: Record<DiagramKind, string> = { flowchart: "flowchart", sequence: "sequenceDiagram", er: "erDiagram", gantt: "gantt", state: "stateDiagram-v2" };
 
 /** Source edits change structure and labels; tokens remain the theme authority. */
 export function validateSource(kind: DiagramKind, source: string): string | null {
   if (source.length > 30_000) return "Keep this diagram under 30,000 characters. Shorten it or reset this diagram.";
   if (/%%\s*\{|^\s*---/m.test(source)) return "Diagram configuration is controlled by your tokens. Remove frontmatter and init directives.";
-  if (/(?:^|[;\n])\s*(?:classDef|style|linkStyle|click)\b/i.test(source)) return "Use tokens to style this diagram. Source styles and click interactions are not supported.";
-  if (kind === "sequence" && /(?:^|[;\n])\s*(?:rect|box|link|links)\b/i.test(source)) return "Use tokens for sequence colours. Coloured groups and actor link interactions are not supported.";
   const content = source.split("\n").filter((line) => !/^\s*%%/.test(line)).join("\n").trim();
   if (!HEADERS[kind].test(content)) return `Enter a ${NAMES[kind]} diagram, or reset this diagram to its sample.`;
+  if (kind === "state") {
+    // State statements can be separated by whitespace alone. Ignore literal
+    // labels and note bodies, then reject styling/interaction keywords wherever
+    // they occur in executable source (including after transitions and braces).
+    const code = content.replace(HEADERS[kind], "")
+      .replace(/"(?:[^"\\]|\\.)*"/g, '""')
+      .replace(/\bnote[ \t]+(?:left|right)[ \t]+of[ \t]+[^\s:]+[ \t]*\r?\n[\s\S]*?\bend[ \t]+note\b/g, "");
+    if (/:::/.test(code) || /\b(?:classDef|style|click|class|cssClass)\b/i.test(code.replace(/:[^\n;]*/g, ""))) return "Use tokens to style states. Source styles and interactions are not supported.";
+    return null;
+  }
+  if (/(?:^|[;\n])\s*(?:classDef|style|linkStyle|click)\b/i.test(source)) return "Use tokens to style this diagram. Source styles and click interactions are not supported.";
+  if (kind === "sequence" && /(?:^|[;\n])\s*(?:rect|box|link|links)\b/i.test(source)) return "Use tokens for sequence colours. Coloured groups and actor link interactions are not supported.";
   return null;
 }
 

@@ -33,7 +33,7 @@ describe("Mermaid batches", () => {
     const render = createBatchRenderer(fake.api);
     const [first, second] = await Promise.all([render({ primaryColor: "#FFFFFF" }), render({ primaryColor: "#222222" })]);
     expect(fake.maximum()).toBe(1);
-    expect(fake.events).toEqual(["init:#FFFFFF", ...Array(4).fill("render:#FFFFFF"), "init:#222222", ...Array(4).fill("render:#222222")]);
+    expect(fake.events).toEqual(["init:#FFFFFF", ...Array(DIAGRAMS.length).fill("render:#FFFFFF"), "init:#222222", ...Array(DIAGRAMS.length).fill("render:#222222")]);
     expect(first?.variables.mainBkg).toBe("#FFFFFF");
     expect(second?.variables.mainBkg).toBe("#222222");
     expect(second?.variables.ignored).toBeUndefined();
@@ -44,8 +44,8 @@ describe("Mermaid batches", () => {
     const render = createBatchRenderer(fake.api);
     const result = await render({}, { ...SAMPLES, sequence: "sequenceDiagram\n broken" });
     expect(result?.diagrams.sequence).toEqual({ ok: false, error: "Invalid diagram" });
-    expect(result?.diagrams.flowchart.ok).toBe(true);
-    expect((await render({}))?.diagrams.sequence.ok).toBe(true);
+    expect(result?.diagrams.flowchart?.ok).toBe(true);
+    expect((await render({}))?.diagrams.sequence?.ok).toBe(true);
   });
 
   it("skips cancelled queued batches and discards results cancelled during rendering", async () => {
@@ -62,7 +62,7 @@ describe("Mermaid batches", () => {
     expect(fake.events.filter((event) => event.startsWith("init"))).toHaveLength(1);
   });
 
-  it("provides all four fixed sample types", () => {
+  it("provides every registered sample type", () => {
     expect(Object.keys(SAMPLES)).toEqual(DIAGRAMS.map((diagram) => diagram.kind));
   });
 });

@@ -12,6 +12,7 @@ const ANCHORS: Record<DiagramKind, Record<string, string>> = {
   sequence: { "primary-text": "text.actor", "note-text": ".noteText", "text-on-background": ".messageText", "lifeline-on-background": ".actor-line" },
   er: { "primary-text": ".label.name", "label-text": ".edgeLabel text", "line-on-background": ".relationshipLine", "attribute-odd": ".row-rect-odd", "attribute-even": ".row-rect-even" },
   gantt: { "primary-text": ".taskText", "text-on-background": ".taskTextOutsideRight, .taskTextOutsideLeft", "section-text": ".taskTextOutsideRight, .taskTextOutsideLeft", "section-title": ".sectionTitle" },
+  state: { "state-text": ".node:not(.statediagram-note) text", "state-transition": ".edgeLabel text", "state-line": ".transition", "note-text": ".statediagram-note" },
 };
 
 type Annotation = { check: PairCheck; anchor: Point; end: Point };

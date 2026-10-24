@@ -1,3 +1,4 @@
+import { DIAGRAMS } from "../src/lib/theme/diagrams";
 import { expect, test } from "@playwright/test";
 
 test("focus edits render locally, reset errors, and export the current source", async ({ page, context }) => {
@@ -29,7 +30,7 @@ test("focus edits render locally, reset errors, and export the current source", 
   await expect(focus.getByRole("img", { name: /Flowchart preview/ })).toContainText("Add tokens");
   await page.keyboard.press("Escape");
   await expect(trigger).toBeFocused();
-  await expect(page.locator(".diagram-body svg")).toHaveCount(4);
+  await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
   expect(problems).toEqual([]);
 });
 
