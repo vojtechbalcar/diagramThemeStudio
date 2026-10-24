@@ -52,4 +52,9 @@ export const SAMPLES: Readonly<Record<DiagramKind, string>> = {
     }
     Theme "1" o-- "many" Token : contains
     note for Theme "A reusable theme"`,
+  pie: `pie
+    title Theme workflow
+    "Tokens" : 40
+    "Mapping" : 35
+    "Review" : 25`,
 };

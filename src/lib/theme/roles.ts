@@ -60,6 +60,7 @@ export function glyphFor(tokenId: string, mapping: Mapping): TokenGlyph | null {
 
 /** Mermaid theme variables the contrast pairs read. */
 export type ThemeVariable =
+  | `pie${number}` | "pieSectionTextColor" | "pieTitleTextColor" | "pieLegendTextColor"
   | "mainBkg"
   | "nodeTextColor"
   | "nodeBorder"
@@ -96,6 +97,9 @@ export type ContrastPair = {
 };
 
 export const CONTRAST_PAIRS: readonly ContrastPair[] = [
+  ...([1, 2, 3] as const).map((index): ContrastPair => ({ id: `pie-slice-${index}`, name: `Percentage text on slice ${index}`, short: `Slice ${index} text`, kind: "text", foreground: "pieSectionTextColor", background: `pie${index}`, backgroundOpacity: 0.7, roles: ["primaryTextColor", "primaryColor", "secondaryColor", "tertiaryColor", "background"], diagrams: ["pie"] })),
+  { id: "pie-title", name: "Pie title on background", short: "Pie title", kind: "text", foreground: "pieTitleTextColor", background: "surface", roles: ["primaryTextColor", "background"], diagrams: ["pie"] },
+  { id: "pie-legend", name: "Legend text on background", short: "Legend text", kind: "text", foreground: "pieLegendTextColor", background: "surface", roles: ["primaryTextColor", "background"], diagrams: ["pie"] },
   { id: "class-note", name: "Class note text on note fill", short: "Note text", kind: "text", foreground: "classText", background: "noteBkgColor", roles: ["primaryTextColor", "noteBkgColor"], diagrams: ["class"] },
   { id: "class-text", name: "Class text on class fill", short: "Class text", kind: "text", foreground: "classText", background: "mainBkg", roles: ["primaryTextColor", "primaryColor"], diagrams: ["class"] },
   { id: "class-label", name: "Relationship text on label fill", short: "Relationship text", kind: "text", foreground: "classText", background: "mainBkg", roles: ["primaryTextColor", "primaryColor"], diagrams: ["class"] },

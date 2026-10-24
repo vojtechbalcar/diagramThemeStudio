@@ -8,6 +8,7 @@ import { leaderPoints, type Point } from "@/lib/mermaid/source";
 import { VerdictSymbol } from "@/components/system/verdict-symbol";
 
 const ANCHORS: Record<DiagramKind, Record<string, string>> = {
+  pie: { "pie-slice-1": ".slice:nth-of-type(1)", "pie-slice-2": ".slice:nth-of-type(2)", "pie-slice-3": ".slice:nth-of-type(3)", "pie-title": ".pieTitleText", "pie-legend": ".legend text" },
   flowchart: { "primary-text": ".node .label", "label-text": ".edgeLabel text", "title-text": ".cluster-label", "line-on-background": ".flowchart-link" },
   sequence: { "primary-text": "text.actor", "note-text": ".noteText", "text-on-background": ".messageText", "lifeline-on-background": ".actor-line" },
   er: { "primary-text": ".label.name", "label-text": ".edgeLabel text", "line-on-background": ".relationshipLine", "attribute-odd": ".row-rect-odd", "attribute-even": ".row-rect-even" },

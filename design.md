@@ -580,6 +580,8 @@ Before a UI change is done, check:
 
 Class proofing checks class members and relationship labels against the opaque class fill. Mermaid uses primary text for SVG class notes, so their check uses class text against note fill; the note-text role does not control those labels. Note leaders attach to the actual note label.
 
+Pie uses a twelve-slot palette cycling the available mapped primary, secondary and tertiary fills. Without mapped fills Mermaid derives its palette. Primary text controls percentages, title and legend; primary border controls outlines. Percentage checks composite the 70% slice fill over the active surface. These variables are emitted by the shared preview/export builder.
+
 ## Appendix B — Changelog
 Every change to this manual, newest first. Say what changed and why, so later readers can tell a decision from an accident.
 

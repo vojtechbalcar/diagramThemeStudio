@@ -19,10 +19,10 @@
 - [x] Verify unit/browser checks and lint; commit/push Class.
 
 ## Pie
-- [ ] Add failing tests for index 7, pie source, palette fill adapters and 70% slice-opacity contrast.
-- [ ] Add Pie sample and parser header. Extend shared theme variable typing and palette adapter; reuse mapped fill roles in 12 slice slots and mapped primary text/border for legend/title/labels/outlines.
-- [ ] Add three percentage/fill checks plus surface title/legend checks and real slice anchors. Export JSON/init/initialize and Mermaid Live use the same adapter.
-- [ ] Verify actual computed SVG opacity/colours and exported config, source edit/reset, unit checks and lint; commit/push Pie.
+- [x] Add failing tests for index 7, pie source, palette fill adapters and 70% slice-opacity contrast.
+- [x] Add Pie sample and parser header. Extend shared theme variable typing and palette adapter; reuse mapped fill roles in 12 slice slots and mapped primary text/border for legend/title/labels/outlines.
+- [x] Add three percentage/fill checks plus surface title/legend checks and real slice anchors. Export JSON/init/initialize and Mermaid Live use the same adapter.
+- [x] Verify actual computed SVG opacity/colours and exported config, source edit/reset, unit checks and lint; commit/push Pie.
 
 ## Timeline
 - [ ] Add failing tests for index 8, timeline source and colour-scale adapters.

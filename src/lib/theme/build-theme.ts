@@ -8,13 +8,14 @@
 import { ROLES, ROLE_TOKEN_TYPE, type Mapping, type Role, type Surface, type Token } from "@/lib/model";
 import { higherContrast } from "@/lib/contrast/wcag";
 import { composite } from "@/lib/tokens/colour";
+import { diagramTheme, type DiagramThemeVariables } from "./diagram-theme";
 import { dimensionToPx } from "@/lib/tokens/values";
 
 /** The fixed preview surfaces (design.md §1.2.3). */
 export const PAPER = "#FFFFFF";
 export const INK = "#0B0B0B";
 
-export type ThemeVariables = Partial<Record<Role, string>> & {
+export type ThemeVariables = Partial<Record<Role, string>> & DiagramThemeVariables & {
   /**
    * Set when the mapped background is dark, so the colours Mermaid derives
    * (borders, label fills, default text) suit a dark background.
@@ -97,7 +98,7 @@ export function buildThemeVariables(
   if (background && higherContrast(background, "#000000", "#FFFFFF") === "#FFFFFF") {
     variables.darkMode = true;
   }
-  return variables;
+  return { ...variables, ...diagramTheme(variables) };
 }
 
 export function mermaidConfig(themeVariables: ThemeVariables): MermaidConfig {

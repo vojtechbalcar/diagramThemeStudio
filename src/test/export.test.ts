@@ -32,8 +32,9 @@ describe("Mermaid exports", () => {
       tokens: [{ id: "alpha", path: "brand", type: "color", value: "#FFFFFF", alpha: 0.5, source: "manual" }],
       mapping: { primaryColor: { tokenId: "alpha", auto: false } },
     };
-    expect(exportConfig(set).themeVariables).toEqual({ primaryColor: "#858585" });
-    expect(exportConfig({ ...set, surface: "paper" }).themeVariables).toEqual({ primaryColor: "#FFFFFF" });
+    expect(new Set(Object.values(exportConfig(set).themeVariables))).toEqual(new Set(["#858585"]));
+    expect(exportConfig(set).themeVariables).not.toHaveProperty("secondaryColor");
+    expect(new Set(Object.values(exportConfig({ ...set, surface: "paper" }).themeVariables))).toEqual(new Set(["#FFFFFF"]));
     expect(exportConfig(createEditorSet()).themeVariables).toEqual({});
   });
 

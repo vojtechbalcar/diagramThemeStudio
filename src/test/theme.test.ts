@@ -87,18 +87,18 @@ describe("buildThemeVariables", () => {
     { path: "size", type: "dimension", value: "0.875rem" },
   );
 
-  it("emits mapped roles only, in panel order, as hex", () => {
+  it("emits mapped roles in panel order followed by diagram palette variables", () => {
     const vars = buildThemeVariables(
       set,
       mapping(set, { fontSize: "size", primaryColor: "brand", primaryTextColor: "white", fontFamily: "font" }),
     );
-    expect(vars).toEqual({
+    expect(vars).toMatchObject({
       primaryColor: "#2F5BD3",
       primaryTextColor: "#FFFFFF",
       fontFamily: '"Helvetica Neue", Arial, sans-serif',
       fontSize: "14px",
     });
-    expect(Object.keys(vars)).toEqual(["primaryColor", "primaryTextColor", "fontFamily", "fontSize"]);
+    expect(Object.keys(vars).slice(0, 4)).toEqual(["primaryColor", "primaryTextColor", "fontFamily", "fontSize"]);
   });
 
   it("composites translucent colours over the background, or the given backdrop", () => {

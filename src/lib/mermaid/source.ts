@@ -1,7 +1,7 @@
 import type { DiagramKind } from "@/lib/theme/diagrams";
 
-const HEADERS: Record<DiagramKind, RegExp> = { flowchart: /^(?:flowchart|graph)\b/, sequence: /^sequenceDiagram\b/, er: /^erDiagram\b/, gantt: /^gantt\b/, state: /^stateDiagram-v2\b/, class: /^classDiagram(?:-v2)?\b/ };
-const NAMES: Record<DiagramKind, string> = { flowchart: "flowchart", sequence: "sequenceDiagram", er: "erDiagram", gantt: "gantt", state: "stateDiagram-v2", class: "classDiagram" };
+const HEADERS: Record<DiagramKind, RegExp> = { flowchart: /^(?:flowchart|graph)\b/, sequence: /^sequenceDiagram\b/, er: /^erDiagram\b/, gantt: /^gantt\b/, state: /^stateDiagram-v2\b/, class: /^classDiagram(?:-v2)?\b/, pie: /^pie\b/ };
+const NAMES: Record<DiagramKind, string> = { flowchart: "flowchart", sequence: "sequenceDiagram", er: "erDiagram", gantt: "gantt", state: "stateDiagram-v2", class: "classDiagram", pie: "pie" };
 
 /** Source edits change structure and labels; tokens remain the theme authority. */
 export function validateSource(kind: DiagramKind, source: string): string | null {

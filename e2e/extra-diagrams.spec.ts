@@ -56,3 +56,50 @@ for (const name of ["State", "Class"]) {
     expect(problems).toEqual([]);
   });
 }
+
+test("Pie proofs all slice colours against each surface and keeps exports consistent", async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/editor");
+  await page.getByRole("button", { name: "Use Night preset" }).click();
+  await expect(page.locator(".diagram-body svg")).toHaveCount(DIAGRAMS.length);
+  await page.getByRole("button", { name: "Open Pie focus mode" }).click();
+  const focus = page.getByRole("dialog", { name: "Pie focus mode" });
+  for (const surface of ["Paper", "Ink", "Brand"]) {
+    await focus.getByRole("group", { name: "Preview surface" }).getByText(surface, { exact: true }).click();
+    await expect(focus.locator(".focus-scroll")).toHaveAttribute("aria-busy", "false");
+    const colors = await focus.locator(".focus-picture svg").evaluate(svg => ({
+      surface: getComputedStyle(svg.closest(".focus-proof")!).backgroundColor,
+      slices: [...svg.querySelectorAll(".pieCircle")].map((path, i) => ({ fill: getComputedStyle(path).fill, opacity: Number(getComputedStyle(path).opacity), text: getComputedStyle(svg.querySelectorAll(".slice")[i]).fill })),
+      title: getComputedStyle(svg.querySelector(".pieTitleText")!).fill,
+      legend: getComputedStyle(svg.querySelector(".legend text")!).fill,
+    }));
+    expect(colors.slices).toHaveLength(3);
+    for (const [i, slice] of colors.slices.entries()) {
+      expect(slice.opacity).toBe(0.7);
+      const ratio = contrastRatio(normaliseCssColour(slice.text)!.hex, composite(normaliseCssColour(slice.fill)!.hex, slice.opacity, normaliseCssColour(colors.surface)!.hex));
+      await expect(focus.getByText(`Percentage text on slice ${i + 1}`, { exact: true }).locator("..")).toContainText(formatRatio(ratio));
+      await expect(focus.getByRole("list", { name: "Contrast annotations" }).getByText(`Slice ${i + 1} text`, { exact: true })).toBeVisible();
+    }
+    for (const [label, color] of [["Pie title on background", colors.title], ["Legend text on background", colors.legend]]) {
+      await expect(focus.getByText(label, { exact: true }).locator("..")).toContainText(formatRatio(contrastRatio(normaliseCssColour(color)!.hex, normaliseCssColour(colors.surface)!.hex)));
+    }
+  }
+  await page.screenshot({ path: testInfo.outputPath("pie-focus.png") });
+  const source = focus.getByRole("textbox", { name: "Diagram source" });
+  const original = await source.inputValue();
+  await source.fill(original.replace("Tokens", "Custom slice"));
+  await expect(focus.getByRole("img", { name: /Pie preview/ })).toContainText("Custom slice");
+  const live = await focus.getByRole("link", { name: /Open in Mermaid Live/ }).getAttribute("href");
+  const state = JSON.parse(Buffer.from(live!.split("#base64:")[1], "base64").toString("utf8"));
+  expect(state.code).toContain("Custom slice");
+  const config = JSON.parse(state.mermaid);
+  expect(config.themeVariables.pie1).toBe(config.themeVariables.primaryColor);
+  expect(config.themeVariables.pie2).toBe(config.themeVariables.secondaryColor);
+  expect(config.themeVariables.pie3).toBe(config.themeVariables.tertiaryColor);
+  await source.fill("flowchart LR\nA-->B");
+  await expect(focus.getByRole("alert")).toContainText("pie");
+  await focus.getByRole("button", { name: "Reset this diagram" }).click();
+  await expect(source).toHaveValue(original);
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("button", { name: "Open Pie focus mode" })).toBeFocused();
+});
