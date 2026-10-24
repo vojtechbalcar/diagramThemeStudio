@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- An arrow tile on a band: ink square, pinstripe, the §1.7 arrow. -->
+  <rect width="32" height="32" fill="#0b0b0b"/>
+  <rect y="4" width="32" height="2" fill="#ffffff"/>
+  <g fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="square" stroke-linejoin="miter" transform="translate(4 6)">
+    <path d="M3.5 12H18.5"/>
+    <path d="M13.636 5.636 20 12 13.636 18.364"/>
+  </g>
+</svg>

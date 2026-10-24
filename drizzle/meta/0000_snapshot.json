@@ -1,0 +1,143 @@
+{
+  "id": "f97b58f9-e4ab-4676-b293-ad96f489c5ff",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.saved_sets": {
+      "name": "saved_sets",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "owner_id": {
+          "name": "owner_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "data": {
+          "name": "data",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "token_count": {
+          "name": "token_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "colors": {
+          "name": "colors",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "revision": {
+          "name": "revision",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp (3) with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "saved_sets_owner_updated_id": {
+          "name": "saved_sets_owner_updated_id",
+          "columns": [
+            {
+              "expression": "owner_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "updated_at",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {
+        "saved_sets_name_length": {
+          "name": "saved_sets_name_length",
+          "value": "char_length(\"saved_sets\".\"name\") between 1 and 80"
+        },
+        "saved_sets_owner_length": {
+          "name": "saved_sets_owner_length",
+          "value": "char_length(\"saved_sets\".\"owner_id\") between 1 and 256"
+        },
+        "saved_sets_revision_positive": {
+          "name": "saved_sets_revision_positive",
+          "value": "\"saved_sets\".\"revision\" > 0"
+        },
+        "saved_sets_token_count": {
+          "name": "saved_sets_token_count",
+          "value": "\"saved_sets\".\"token_count\" between 1 and 1000"
+        },
+        "saved_sets_version": {
+          "name": "saved_sets_version",
+          "value": "jsonb_typeof(\"saved_sets\".\"data\") = 'object' and \"saved_sets\".\"data\"->>'version' = '1'"
+        },
+        "saved_sets_colors": {
+          "name": "saved_sets_colors",
+          "value": "jsonb_typeof(\"saved_sets\".\"colors\") = 'array' and jsonb_array_length(\"saved_sets\".\"colors\") <= 4"
+        }
+      },
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}
