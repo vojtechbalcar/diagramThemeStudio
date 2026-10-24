@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Band } from "./band";
 import { ModeToggle } from "./mode-toggle";
+import { AccountNav } from "@/components/accounts/account-nav";
 
 export type SystemBandProps = {
   /** Shown after the product name in muted band text, e.g. the set name. */
@@ -26,6 +27,7 @@ export function SystemBand({ subtitle, children }: SystemBandProps) {
       }
     >
       {children}
+      <AccountNav />
       <ModeToggle />
     </Band>
   );

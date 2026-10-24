@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ModeScript } from "@/components/system/mode-script";
+import { AccountProvider } from "@/components/accounts/account-provider";
+import { clerkConfigured } from "@/lib/server/accounts";
 import "./globals.css";
 
 const inter = Inter({
@@ -30,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <head>
         <ModeScript />
       </head>
-      <body>{children}</body>
+      <body><AccountProvider clerkEnabled={clerkConfigured()}>{children}</AccountProvider></body>
     </html>
   );
 }
