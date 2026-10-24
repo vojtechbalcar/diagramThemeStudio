@@ -2,7 +2,7 @@
 import type { Role } from "@/lib/model";
 
 export type DiagramThemeVariables = Partial<Record<
-  `pie${number}` | "pieSectionTextColor" | "pieTitleTextColor" | "pieLegendTextColor" | "pieStrokeColor" | "pieOuterStrokeColor",
+  `cScale${number}` | `cScaleLabel${number}` | `pie${number}` | "pieSectionTextColor" | "pieTitleTextColor" | "pieLegendTextColor" | "pieStrokeColor" | "pieOuterStrokeColor",
   string
 >>;
 
@@ -10,7 +10,13 @@ export function diagramTheme(roles: Partial<Record<Role, string>>): DiagramTheme
   const variables: DiagramThemeVariables = {};
   const fills = [roles.primaryColor, roles.secondaryColor, roles.tertiaryColor].filter((fill): fill is string => Boolean(fill));
   // A full palette uses only mapped fills. With none mapped, Mermaid derives it.
-  if (fills.length) for (let i = 1; i <= 12; i++) variables[`pie${i}`] = fills[(i - 1) % fills.length];
+  for (let i = 0; i < 12; i++) {
+    if (fills.length) {
+      variables[`pie${i + 1}`] = fills[i % fills.length];
+      variables[`cScale${i}`] = fills[i % fills.length];
+    }
+    if (roles.primaryTextColor) variables[`cScaleLabel${i}`] = roles.primaryTextColor;
+  }
   if (roles.primaryTextColor) {
     variables.pieSectionTextColor = roles.primaryTextColor;
     variables.pieTitleTextColor = roles.primaryTextColor;

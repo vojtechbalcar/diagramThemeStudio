@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { contrastRatio, formatRatio } from "../src/lib/contrast/wcag";
 import { composite, normaliseCssColour } from "../src/lib/tokens/colour";
 
-test("import, map and edit a theme across all four live previews", async ({ page }) => {
+test("import, map and edit a theme across all live previews", async ({ page }) => {
   const problems: string[] = [];
   page.on("console", (message) => { if (["error", "warning"].includes(message.type())) problems.push(message.text()); });
   page.on("pageerror", (error) => problems.push(error.message));

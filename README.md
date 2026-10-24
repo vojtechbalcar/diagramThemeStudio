@@ -1,6 +1,6 @@
 # Linework
 
-Turn design tokens into a Mermaid theme, preview four diagram types and check their contrast. No backend or account is required.
+Turn design tokens into a Mermaid theme, preview eight diagram types and check their contrast. No backend or account is required.
 
 ```sh
 pnpm install
@@ -20,7 +20,9 @@ Milestones 1–5 are implemented. Export an init directive, `mermaid.initialize(
 
 Click a diagram to edit its Mermaid source in focus mode, inspect contrast leaders and reset it independently. Source edits stay in the current session; share links contain the theme. Phones use separate Tokens, Canvas and Export views, while tablets retain the Tokens drawer.
 
-The landing page previews all four presets with pause controls and reduced-motion support. The first v2 slice adds optional accounts and private saved sets; a public gallery and extra diagram types remain later work.
+The editor supports Flowchart, Sequence, Entity relationship, Gantt, State, Class, Pie and Timeline. The landing page keeps a compact four-diagram proof across all four presets, with pause controls and reduced-motion support. v2 includes optional accounts and private saved sets; the public gallery and line-map palette view remain later work.
+
+Pie slices and Timeline groups cycle the available mapped primary, secondary and tertiary fills. Primary text controls their labels; primary border controls Pie outlines. These settings and Timeline’s event-filter correction are included in every Mermaid configuration export and Live link. Contrast checks cover representative theme pairs; custom sources can use additional colours that are not audited.
 
 ## Accounts and database setup
 
@@ -37,4 +39,4 @@ See the [Clerk Next.js setup](https://clerk.com/docs/nextjs/getting-started/quic
 
 [docs/ci/verify.yml](docs/ci/verify.yml) is a GitHub Actions template with an isolated Postgres service; copy it into `.github/workflows/verify.yml` using a GitHub login with workflow permission to enable CI. No Clerk secrets are needed for that workflow. Browser tests mock account/API responses to exercise UI states and do not prove a live Clerk session. Verify real sign-in and cross-device persistence after configuring your services.
 
-Read [CLAUDE.md](CLAUDE.md) for architecture and [design.md](design.md) for the binding visual specification. The [M3 plan](docs/superpowers/plans/2026-10-22-m3-editor.md), [M4 plan](docs/superpowers/plans/2026-10-22-m4-export-share.md), [M5 plan](docs/superpowers/plans/2026-10-22-m5-polish.md) and [M6A plan](docs/superpowers/plans/2026-10-22-m6-accounts-saved-sets.md) record implementation and verification.
+Read [CLAUDE.md](CLAUDE.md) for architecture and [design.md](design.md) for the binding visual specification. The [M3 plan](docs/superpowers/plans/2026-10-22-m3-editor.md), [M4 plan](docs/superpowers/plans/2026-10-22-m4-export-share.md), [M5 plan](docs/superpowers/plans/2026-10-22-m5-polish.md) [M6A plan](docs/superpowers/plans/2026-10-22-m6-accounts-saved-sets.md) and [extra diagrams plan](docs/superpowers/plans/2026-10-24-extra-diagrams.md) record implementation and verification.

@@ -27,8 +27,11 @@ export type MermaidConfig = {
   startOnLoad: false;
   theme: "base";
   securityLevel: "strict";
+  htmlLabels: false;
   /** Pinned so a Mermaid default change can't add gradients or shadows. */
   look: "classic";
+  /** Keep Timeline events at their mapped colours in preview and exports. */
+  themeCSS: string;
   themeVariables: ThemeVariables;
 };
 
@@ -102,5 +105,5 @@ export function buildThemeVariables(
 }
 
 export function mermaidConfig(themeVariables: ThemeVariables): MermaidConfig {
-  return { startOnLoad: false, theme: "base", securityLevel: "strict", look: "classic", themeVariables };
+  return { startOnLoad: false, theme: "base", securityLevel: "strict", htmlLabels: false, look: "classic", themeCSS: ".eventWrapper { filter: none; }", themeVariables };
 }

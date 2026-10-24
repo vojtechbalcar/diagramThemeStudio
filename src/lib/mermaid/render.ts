@@ -4,7 +4,7 @@ import { createBatchRenderer } from "./batch";
 
 export const renderBatch = createBatchRenderer({
   initialize(config) {
-    mermaid.initialize({ ...config, suppressErrorRendering: true, htmlLabels: false });
+    mermaid.initialize({ ...config, suppressErrorRendering: true });
   },
   getThemeVariables() {
     // Mermaid exposes no public resolved-theme getter. Keep this internal API

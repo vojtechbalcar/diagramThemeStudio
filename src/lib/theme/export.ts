@@ -13,7 +13,7 @@ export type ExportFormat = (typeof EXPORT_FORMATS)[number]["value"];
 /** Use the same alpha backdrop and label mode as the current preview. */
 export function exportConfig(set: TokenSet) {
   const backdrop = surfaceHex(set.surface, set.tokens, set.mapping);
-  return { ...mermaidConfig(buildThemeVariables(set.tokens, set.mapping, { backdrop })), htmlLabels: false as const };
+  return mermaidConfig(buildThemeVariables(set.tokens, set.mapping, { backdrop }));
 }
 
 function safeJson(value: unknown, indent?: number): string {

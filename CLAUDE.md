@@ -6,7 +6,7 @@
 User flow:
 1. **Add tokens:** paste a token file (W3C DTCG JSON, CSS custom properties, or a Figma variables export), pick a preset, or edit colours by hand.
 2. **Map roles:** assign tokens to Mermaid theme roles (primary fill, text, border, line, background, notes, font). Auto-map guesses from token names.
-3. **Preview:** four diagram types (flowchart, sequence, entity relationship, Gantt) re-render live with the theme, on a switchable surface (white / black / the brand background).
+3. **Preview:** eight diagram types (flowchart, sequence, entity relationship, Gantt, State, Class, Pie, Timeline) re-render live with the theme, on a switchable surface (white / black / the brand background).
 4. **Check contrast:** every text/fill pair gets a WCAG 2.x ratio and a pass / large-only / fail verdict.
 5. **Export:** a Mermaid `%%{init: …}%%` directive, a `mermaid.initialize()` config, raw JSON, or a share link that encodes the whole state in the URL.
 
@@ -127,7 +127,7 @@ type TokenSet = { version: 1; name: string; tokens: Token[]; mapping: Mapping; s
 3. **Editor v1:** shell layout, token panel, mapping panel, canvas with four live diagram cards, contrast list, colour strip.
 4. **Export + share:** export drawer with title block, all output formats, URL state encode/decode.
 5. **Polish:** motion (§4), empty/loading/error states, focus mode with leader-line annotations, responsive (§5), landing page.
-6. **v2 (later):** Postgres + Drizzle + Clerk saved sets, public gallery, more diagram types, the "line map" palette view.
+6. **v2:** Optional Postgres + Drizzle + Clerk accounts/private saved sets and eight editor diagram types are implemented. Public gallery and the "line map" palette view remain later work. Pie/Timeline palettes reuse mapped fills through the shared builder; Timeline event-filter CSS is exported too. The landing page deliberately renders only the original four types.
 
 Finish and polish one milestone before starting the next.
 

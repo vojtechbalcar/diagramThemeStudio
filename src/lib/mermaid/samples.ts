@@ -12,7 +12,7 @@ export const SAMPLES: Readonly<Record<DiagramKind, string>> = {
     participant Designer
     participant Linework
     Designer->>Linework: Add brand tokens
-    Note over Linework: One theme, four diagrams
+    Note over Linework: One theme, every diagram
     Linework-->>Designer: Preview and contrast
     Designer->>Linework: Refine the palette`,
   er: `erDiagram
@@ -57,4 +57,12 @@ export const SAMPLES: Readonly<Record<DiagramKind, string>> = {
     "Tokens" : 40
     "Mapping" : 35
     "Review" : 25`,
+  timeline: `timeline
+    title Theme workflow
+    section Collect
+      Import : Add tokens
+    section Refine
+      Map : Assign roles
+    section Deliver
+      Review : Export theme`,
 };

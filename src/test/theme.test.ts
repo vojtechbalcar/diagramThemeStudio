@@ -127,7 +127,9 @@ describe("buildThemeVariables", () => {
       startOnLoad: false,
       theme: "base",
       securityLevel: "strict",
+      htmlLabels: false,
       look: "classic",
+      themeCSS: ".eventWrapper { filter: none; }",
       themeVariables: { primaryColor: "#2F5BD3" },
     });
   });

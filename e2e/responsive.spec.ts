@@ -53,7 +53,7 @@ test("new renders crossfade in reading order and reduced motion removes timing",
     const style = getComputedStyle(picture);
     return [style.animationDuration, style.animationDelay];
   }));
-  expect(timings).toEqual([["0.16s", "0s"], ["0.16s", "0.03s"], ["0.16s", "0.06s"], ["0.16s", "0.09s"]]);
+  expect(timings).toEqual(DIAGRAMS.map((_, i) => ["0.16s", `${i * 0.03}s`]));
   await page.emulateMedia({ reducedMotion: "reduce" });
   const reduced = await page.locator('.diagram-picture-current').evaluateAll((pictures) => pictures.map((picture) => [getComputedStyle(picture).animationDuration, getComputedStyle(picture).animationDelay]));
   expect(reduced.every(([duration, delay]) => duration === "0s" && delay === "0s")).toBe(true);

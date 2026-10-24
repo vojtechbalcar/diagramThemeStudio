@@ -8,6 +8,6 @@ it("encodes Unicode source and a JSON configuration string for Mermaid Live", ()
   const state = JSON.parse(new TextDecoder().decode(bytes));
   expect(state.code).toBe(source);
   expect(typeof state.mermaid).toBe("string");
-  expect(JSON.parse(state.mermaid)).toMatchObject({ theme: "base", securityLevel: "strict", themeVariables: { primaryColor: "#123456" } });
+  expect(JSON.parse(state.mermaid)).toMatchObject({ theme: "base", securityLevel: "strict", htmlLabels: false, themeVariables: { primaryColor: "#123456" } });
   expect(state.rough).toBe(false);
 });

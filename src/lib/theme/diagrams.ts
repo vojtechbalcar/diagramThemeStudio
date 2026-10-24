@@ -11,6 +11,7 @@ export const DIAGRAMS = [
   { kind: "state", index: 5, name: "State" },
   { kind: "class", index: 6, name: "Class" },
   { kind: "pie", index: 7, name: "Pie" },
+  { kind: "timeline", index: 8, name: "Timeline" },
 ] as const;
 
 export type DiagramKind = (typeof DIAGRAMS)[number]["kind"];

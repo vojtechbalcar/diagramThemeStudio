@@ -255,7 +255,7 @@ Messages read like a sign: what is happening, then what to do.
 - **System band:** product name (`band` 700) left; set name (`body` 500, muted band text `--lw-grey-200`) editable inline; right side: Import (text button), Share link (text button), Export (primary button with arrow tile; through the band's ink scope it is white with a dark label — the one white object on the band). Mode toggle at the far right: an icon button (§3.9) showing the current mode (Sun in light, Moon in dark), named "Dark mode" and marked pressed when dark is on. Choosing the mode the system already prefers clears the stored choice, so the interface follows `prefers-color-scheme` again.
 - **Token panel:** band "Tokens" with Plus symbol; secondary bands per group; scrolls independently.
 - **Mapping panel:** below Tokens on the same column, band "Mapping"; can be collapsed to its band.
-- **Canvas:** toolbar + 2×2 grid of sign panels; grid becomes 1 column below 1024px of canvas width. Cards are equal height (min 360px).
+- **Canvas:** toolbar + two-column grid of eight sign panels; grid becomes one column below 640px of canvas width. Cards are equal height (min 360px).
 - **Colour strip:** fixed bottom, 48px.
 
 The editor exposes Import, Share link, Export and the mode toggle in the system band, with the set name edited in the token panel. Below 768px, Import moves into the Tokens view, sharing is available in the Export view's Share link tab, and the system band keeps only the name and mode toggle. A joined Tokens / Canvas / Export control follows the band.
@@ -292,13 +292,17 @@ A two-column table: **Role** (Mermaid role, `body`) → **Token** (select showin
 
 ### 3.5 Contrast annotations
 The proofing marks — the feature that makes Linework a designer's tool.
-- Every text/fill pair in a diagram gets an annotation in the card's **contrast list**, revealed by toggling "Show contrast" in the canvas toolbar (on by default).
+- Each registered theme text/fill pair gets an annotation in the card's **contrast list**, revealed by toggling "Show contrast" in the canvas toolbar (on by default).
 - Annotation = symbol (Pass / Large-only / Fail) + ratio (`mono`) + pair name (`small`): `✕ 2.9:1  Primary text on primary fill`.
 - In focus mode, annotations are drawn *on* the diagram as leader lines: a 1px line in the preview surface's ink (§1.2.5) from the element to a label tile (on-ink fill, 1px ink frame, `mono-small` in ink). Leader lines run horizontal or at 45° only, never at arbitrary angles.
 - Focus leaders anchor representative elements actually present in the SVG. Missing features have no leader; the complete theme-pair list remains below the proof. The annotation rail uses 176px tiles; on phones the proof scrolls horizontally within its pane. Leaders and tiles use preview-surface ink, independent of interface mode. Repeated SVG views receive separate IDs for CSS/markers.
 - Thresholds: WCAG 2.x — 4.5:1 normal text (AA), 3:1 large text and non-text elements such as lines against background, 7:1 shown as AAA.
 - Checks use Mermaid's resolved theme variables. Entity attributes include both alternating row fills; Gantt includes its section title and outside task text against the section fill composited at Mermaid's 20% opacity. These are separate pairs because derived fills can fail when the primary fill passes.
 - State diagrams use their resolved state, note and transition colours. Transition-label backgrounds are composited at Mermaid's 50% opacity over the current surface; node and transition text have separate checks and SVG leaders.
+
+- Class proofing checks class members and relationship labels against the opaque class fill. Mermaid uses primary text for SVG class notes, so their check uses class text against note fill; the note-text role does not control those labels. Note leaders attach to the actual note label.
+- Pie uses a twelve-slot palette cycling the available mapped primary, secondary and tertiary fills. Without mapped fills Mermaid derives its palette. Primary text controls percentages, title and legend; primary border controls outlines. Percentage checks composite the 70% slice fill over the active surface. These variables are emitted by the shared preview/export builder.
+- Timeline uses twelve scale slots cycling the same mapped fills, with primary text for scale labels. Mermaid gives the first group SVG class `section--1`, which uses scale slot zero. Its shared theme CSS removes event brightness filters so tasks, section headers and events use the checked colours; exported configs include that rule. SVG text-label mode is part of the shared configuration, including Mermaid Live links. The three sample groups have separate text/fill leaders and a title/background check.
 
 ### 3.6 Colour strip
 Fixed bar along the bottom: every colour token as a 48px-high block, width proportional (equal widths). Below each block, inside it, the hex in `mono-small`, colour auto black/white. Clicking a block selects that token in the panel. It is the "line map" of the palette — the Dribbble shot lives here.
@@ -383,7 +387,7 @@ Transit motion is the train, not the sign. Signs don't move. Motion in Linework 
 
 | Event | Motion | Duration / easing |
 |---|---|---|
-| Token value changes | Each diagram crossfades from old render to new; cards update in reading order (1→4) with a 30ms stagger. | 160ms, `cubic-bezier(0.2, 0, 0, 1)` |
+| Token value changes | Each diagram crossfades from old render to new; cards update in reading order (1→8) with a 30ms stagger. | 160ms, `cubic-bezier(0.2, 0, 0, 1)` |
 | Contrast result changes | The ratio number swaps instantly; the symbol scales from 0.8 → 1 once. | 120ms, same easing |
 | Drawer open/close | Slide from right, no fade. | 200ms open / 160ms close |
 | Dialog | Appears instantly; scrim fades. | Scrim 120ms |
@@ -392,7 +396,7 @@ Transit motion is the train, not the sign. Signs don't move. Motion in Linework 
 
 - Debounce re-rendering 120ms after the last keystroke in a hex field; colour-picker drags update at most every 50ms.
 - `prefers-reduced-motion: reduce` → all durations 0, staggers removed.
-- Renders crossfade within each card for 160ms, with 0/30/60/90ms delays. The outgoing picture is hidden from assistive technology and discarded after the transition; contrast numbers change immediately. Dialog scrims, drawer slides, verdict symbols and toast entrances use the finite timings above. Wrapped toasts can grow beyond 48px to keep failure guidance readable.
+- Renders crossfade within each card for 160ms, with 30ms steps from 0 through 210ms for the eight editor cards. The outgoing picture is hidden from assistive technology and discarded after the transition; contrast numbers change immediately. Dialog scrims, drawer slides, verdict symbols and toast entrances use the finite timings above. Wrapped toasts can grow beyond 48px to keep failure guidance readable.
 - Nothing loops, bounces, springs, or parallaxes in the editor. The landing hero cycle is the only repeating motion and stops on hover and under reduced motion.
 
 ---
@@ -578,12 +582,12 @@ Before a UI change is done, check:
 
 ---
 
-Class proofing checks class members and relationship labels against the opaque class fill. Mermaid uses primary text for SVG class notes, so their check uses class text against note fill; the note-text role does not control those labels. Note leaders attach to the actual note label.
-
-Pie uses a twelve-slot palette cycling the available mapped primary, secondary and tertiary fills. Without mapped fills Mermaid derives its palette. Primary text controls percentages, title and legend; primary border controls outlines. Percentage checks composite the 70% slice fill over the active surface. These variables are emitted by the shared preview/export builder.
-
 ## Appendix B — Changelog
 Every change to this manual, newest first. Say what changed and why, so later readers can tell a decision from an accident.
+
+### 24 Oct 2026 — Additional diagram types
+
+Added State, Class, Pie and Timeline at fixed indexes 5–8, with the same focus/source/export controls. Documented actual SVG contrast pairs, translucent state labels and Pie slices, mapped palettes, Timeline filter removal and the eight-card stagger. The landing proof retains its original four diagrams.
 
 ### 24 Oct 2026 — Accounts and private saved sets
 

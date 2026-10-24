@@ -60,6 +60,7 @@ export function glyphFor(tokenId: string, mapping: Mapping): TokenGlyph | null {
 
 /** Mermaid theme variables the contrast pairs read. */
 export type ThemeVariable =
+  | `cScale${number}` | `cScaleLabel${number}`
   | `pie${number}` | "pieSectionTextColor" | "pieTitleTextColor" | "pieLegendTextColor"
   | "mainBkg"
   | "nodeTextColor"
@@ -97,6 +98,9 @@ export type ContrastPair = {
 };
 
 export const CONTRAST_PAIRS: readonly ContrastPair[] = [
+  // The first Timeline group has SVG class section--1 and uses cScale0.
+  ...([1, 2, 3] as const).map((index): ContrastPair => ({ id: `timeline-group-${index}`, name: `Group ${index} text on group fill`, short: `Group ${index} text`, kind: "text", foreground: `cScaleLabel${index - 1}`, background: `cScale${index - 1}`, roles: ["primaryTextColor", "primaryColor", "secondaryColor", "tertiaryColor"], diagrams: ["timeline"] })),
+  { id: "timeline-title", name: "Timeline title on background", short: "Timeline title", kind: "text", foreground: "textColor", background: "surface", roles: ["primaryTextColor", "background"], diagrams: ["timeline"] },
   ...([1, 2, 3] as const).map((index): ContrastPair => ({ id: `pie-slice-${index}`, name: `Percentage text on slice ${index}`, short: `Slice ${index} text`, kind: "text", foreground: "pieSectionTextColor", background: `pie${index}`, backgroundOpacity: 0.7, roles: ["primaryTextColor", "primaryColor", "secondaryColor", "tertiaryColor", "background"], diagrams: ["pie"] })),
   { id: "pie-title", name: "Pie title on background", short: "Pie title", kind: "text", foreground: "pieTitleTextColor", background: "surface", roles: ["primaryTextColor", "background"], diagrams: ["pie"] },
   { id: "pie-legend", name: "Legend text on background", short: "Legend text", kind: "text", foreground: "pieLegendTextColor", background: "surface", roles: ["primaryTextColor", "background"], diagrams: ["pie"] },

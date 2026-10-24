@@ -98,6 +98,7 @@ describe("summaries and messages", () => {
 
   it("checks every readable pair", () => {
     expect(checks.map((c) => c.pair.id)).toEqual([
+      "timeline-title",
       "primary-text",
       "label-text",
       "note-text",
@@ -108,7 +109,7 @@ describe("summaries and messages", () => {
   });
 
   it("summarises with the worst outcome first", () => {
-    expect(summarise(checks)).toEqual({ pairs: 6, pass: 4, large: 0, fail: 2, worst: "fail" });
+    expect(summarise(checks)).toEqual({ pairs: 7, pass: 4, large: 0, fail: 3, worst: "fail" });
     expect(summarise(checksFor("er", checks))).toEqual({ pairs: 3, pass: 2, large: 0, fail: 1, worst: "fail" });
     expect(summarise([])).toEqual({ pairs: 0, pass: 0, large: 0, fail: 0, worst: null });
   });
