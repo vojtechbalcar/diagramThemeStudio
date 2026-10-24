@@ -1,7 +1,7 @@
 import type { DiagramKind } from "@/lib/theme/diagrams";
 
-const HEADERS: Record<DiagramKind, RegExp> = { flowchart: /^(?:flowchart|graph)\b/, sequence: /^sequenceDiagram\b/, er: /^erDiagram\b/, gantt: /^gantt\b/, state: /^stateDiagram-v2\b/ };
-const NAMES: Record<DiagramKind, string> = { flowchart: "flowchart", sequence: "sequenceDiagram", er: "erDiagram", gantt: "gantt", state: "stateDiagram-v2" };
+const HEADERS: Record<DiagramKind, RegExp> = { flowchart: /^(?:flowchart|graph)\b/, sequence: /^sequenceDiagram\b/, er: /^erDiagram\b/, gantt: /^gantt\b/, state: /^stateDiagram-v2\b/, class: /^classDiagram(?:-v2)?\b/ };
+const NAMES: Record<DiagramKind, string> = { flowchart: "flowchart", sequence: "sequenceDiagram", er: "erDiagram", gantt: "gantt", state: "stateDiagram-v2", class: "classDiagram" };
 
 /** Source edits change structure and labels; tokens remain the theme authority. */
 export function validateSource(kind: DiagramKind, source: string): string | null {
@@ -17,6 +17,15 @@ export function validateSource(kind: DiagramKind, source: string): string | null
       .replace(/"(?:[^"\\]|\\.)*"/g, '""')
       .replace(/\bnote[ \t]+(?:left|right)[ \t]+of[ \t]+[^\s:]+[ \t]*\r?\n[\s\S]*?\bend[ \t]+note\b/g, "");
     if (/:::/.test(code) || /\b(?:classDef|style|click|class|cssClass)\b/i.test(code.replace(/:[^\n;]*/g, ""))) return "Use tokens to style states. Source styles and interactions are not supported.";
+    return null;
+  }
+  if (kind === "class") {
+    // Class member bodies and relationship labels are literal text, but style
+    // and link commands may otherwise follow the header or another statement.
+    const code = content.replace(HEADERS[kind], "")
+      .replace(/"(?:[^"\\]|\\.)*"/g, '""')
+      .replace(/(\bclass[ \t]+[^{}\n]+)\s*\{[^{}]*\}/g, "$1 {}");
+    if (/:::/.test(code) || /\b(?:classDef|style|cssClass|callback|click|link)\b/.test(code.replace(/:[^\n;]*/g, ""))) return "Use tokens to style classes. Source styles and interactions are not supported.";
     return null;
   }
   if (/(?:^|[;\n])\s*(?:classDef|style|linkStyle|click)\b/i.test(source)) return "Use tokens to style this diagram. Source styles and click interactions are not supported.";

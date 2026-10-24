@@ -41,4 +41,15 @@ export const SAMPLES: Readonly<Record<DiagramKind, string>> = {
     Review --> Ready: Check contrast
     Ready --> [*]
     note right of Review: Refine the palette`,
+  class: `classDiagram
+    class Token {
+      +String path
+      +String value
+    }
+    class Theme {
+      +String name
+      +export()
+    }
+    Theme "1" o-- "many" Token : contains
+    note for Theme "A reusable theme"`,
 };

@@ -74,7 +74,7 @@ export type ThemeVariable =
   | "rowOdd"
   | "rowEven"
   | "sectionBkgColor"
-  | "stateLabelColor" | "stateBkg" | "transitionLabelColor" | "labelBackgroundColor" | "transitionColor";
+  | "stateLabelColor" | "stateBkg" | "transitionLabelColor" | "labelBackgroundColor" | "transitionColor" | "classText";
 
 export type ContrastPair = {
   id: string;
@@ -96,6 +96,9 @@ export type ContrastPair = {
 };
 
 export const CONTRAST_PAIRS: readonly ContrastPair[] = [
+  { id: "class-note", name: "Class note text on note fill", short: "Note text", kind: "text", foreground: "classText", background: "noteBkgColor", roles: ["primaryTextColor", "noteBkgColor"], diagrams: ["class"] },
+  { id: "class-text", name: "Class text on class fill", short: "Class text", kind: "text", foreground: "classText", background: "mainBkg", roles: ["primaryTextColor", "primaryColor"], diagrams: ["class"] },
+  { id: "class-label", name: "Relationship text on label fill", short: "Relationship text", kind: "text", foreground: "classText", background: "mainBkg", roles: ["primaryTextColor", "primaryColor"], diagrams: ["class"] },
   { id: "state-text", name: "State text on state fill", short: "State text", kind: "text", foreground: "stateLabelColor", background: "stateBkg", roles: ["primaryTextColor", "primaryColor"], diagrams: ["state"] },
   { id: "state-transition", name: "Transition text on label fill", short: "Transition text", kind: "text", foreground: "transitionLabelColor", background: "labelBackgroundColor", backgroundOpacity: 0.5, roles: ["primaryTextColor", "primaryColor", "background"], diagrams: ["state"] },
   { id: "state-line", name: "Transition line on background", short: "Transition line", kind: "non-text", foreground: "transitionColor", background: "surface", roles: ["lineColor", "background"], diagrams: ["state"] },
@@ -159,7 +162,7 @@ export const CONTRAST_PAIRS: readonly ContrastPair[] = [
     foreground: "lineColor",
     background: "surface",
     roles: ["lineColor", "background"],
-    diagrams: ["flowchart", "er"],
+    diagrams: ["flowchart", "er", "class"],
   },
   {
     id: "lifeline-on-background",

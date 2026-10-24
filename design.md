@@ -578,6 +578,8 @@ Before a UI change is done, check:
 
 ---
 
+Class proofing checks class members and relationship labels against the opaque class fill. Mermaid uses primary text for SVG class notes, so their check uses class text against note fill; the note-text role does not control those labels. Note leaders attach to the actual note label.
+
 ## Appendix B — Changelog
 Every change to this manual, newest first. Say what changed and why, so later readers can tell a decision from an accident.
 

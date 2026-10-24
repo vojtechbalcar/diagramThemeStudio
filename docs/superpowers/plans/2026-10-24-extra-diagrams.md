@@ -14,9 +14,9 @@
 - [x] Verify unit tests, production browser checks and lint; commit/push State.
 
 ## Class
-- [ ] Add failing registry/source/browser tests, then Class index 6, representative members/relationships/note source, resolved class-text checks and SVG anchors.
-- [ ] Reject class-only URL/callback/CSS overrides while accepting actual class declarations.
-- [ ] Verify unit/browser checks and lint; commit/push Class.
+- [x] Add failing registry/source/browser tests, then Class index 6, representative members/relationships/note source, resolved class-text checks and SVG anchors.
+- [x] Reject class-only URL/callback/CSS overrides while accepting actual class declarations.
+- [x] Verify unit/browser checks and lint; commit/push Class.
 
 ## Pie
 - [ ] Add failing tests for index 7, pie source, palette fill adapters and 70% slice-opacity contrast.

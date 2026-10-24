@@ -9,6 +9,7 @@ export const DIAGRAMS = [
   { kind: "er", index: 3, name: "Entity relationship" },
   { kind: "gantt", index: 4, name: "Gantt" },
   { kind: "state", index: 5, name: "State" },
+  { kind: "class", index: 6, name: "Class" },
 ] as const;
 
 export type DiagramKind = (typeof DIAGRAMS)[number]["kind"];

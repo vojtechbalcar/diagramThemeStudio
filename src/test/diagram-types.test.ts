@@ -36,3 +36,13 @@ it("allows style-related words inside state labels and notes", () => {
 it("checks state statements following a semicolon-terminated label", () => {
   expect(validateSource("state", "stateDiagram-v2\nIdle --> Ready: Next; style Ready fill:red")).not.toBeNull();
 });
+
+it("adds Class as diagram 6 while protecting genuine class declarations", () => {
+  expect(DIAGRAMS).toContainEqual({ kind: "class", index: 6, name: "Class" });
+  expect(validateSource("class", SAMPLES.class)).toBeNull();
+  expect(validateSource("class", "classDiagram\nclass Token {\n +String value\n}")).toBeNull();
+  for (const command of ['class Token:::custom { +String value }', 'class Token:::custom', 'link Token "https://example.com"', "callback Token run()", "cssClass Token selected", "classDef default fill:red", "style Token fill:red"]) {
+    expect(validateSource("class", `classDiagram ${command}\nclass Token`), command).not.toBeNull();
+  }
+  expect(pairsFor("class").map((pair) => pair.id)).toEqual(expect.arrayContaining(["class-text", "class-label", "line-on-background"]));
+});
